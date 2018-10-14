@@ -200,6 +200,19 @@ export default {
     return Y + M + D + h + m + s
   },
 
+  randomNum (lower, upper) {
+    return Math.floor(Math.random() * (upper - lower)) + lower
+  },
+
+  randomColor () {
+    let str16 = '0123456789ABCDEF'
+    let newColor = '#'
+    for (var i = 0; i < 6; i++) {
+      newColor += str16.charAt(this.randomNum(0, 16))
+    }
+    return newColor
+  },
+
   resolveFunc (res) {
     let errorMessage = null
     if (!res.data.hasOwnProperty('failed')) {

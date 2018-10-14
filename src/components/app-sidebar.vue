@@ -91,7 +91,7 @@ export default {
   data () {
     return {
       credentials: {
-        password: '111111111'
+        password: ''
       }
     }
   },

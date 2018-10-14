@@ -9,24 +9,28 @@ v-container.my-porch(
   v-layout(v-show="showPage" row wrap)
     v-flex(d-flex xs3 offset-xs2)
       v-card
-        v-card-text {{data.members[0].isempty ? "Empty Room" : data.members[0].name + "'s Room"}}
+        v-card-text
+          span(:style="randStyle(data.members[0].isempty)") {{data.members[0].isempty ? "Empty Room" : data.members[0].name + "'s Room"}}
         img(
           :src='doorPic(data.members[0].isempty)'
           @click="openDialogFull('EnterRoom', data.members[0].id)"
         )
     v-flex(d-flex xs2)
       v-card(flat)
-        v-card-text Floor# {{ data.game_floor }}
+        v-card-text
+          span(:style="floorStyle()") Floor# {{ data.game_floor }}
     v-flex(d-flex xs3)
       v-card
-        v-card-text {{data.members[1].isempty ? "Empty Room" : data.members[1].name + "'s Room"}}
+        v-card-text
+          span(:style="randStyle(data.members[1].isempty)") {{data.members[1].isempty ? "Empty Room" : data.members[1].name + "'s Room"}}
         img(
           :src='doorPic(data.members[1].isempty)'
           @click="openDialogFull('EnterRoom', data.members[1].id)"
         )
     v-flex(d-flex xs3)
       v-card
-        v-card-text {{data.members[2].isempty ? "Empty Room" : data.members[2].name + "'s Room"}}
+        v-card-text
+          span(:style="randStyle(data.members[2].isempty)") {{data.members[2].isempty ? "Empty Room" : data.members[2].name + "'s Room"}}
         img(
           :src='doorPic(data.members[2].isempty)'
           @click="openDialogFull('EnterRoom', data.members[2].id)"
@@ -40,7 +44,8 @@ v-container.my-porch(
         ) To Floor#1
     v-flex(d-flex xs2)
       v-card
-        v-card-text My Room
+        v-card-text
+          span(:style="randStyle(false)") My Room
         img(
           src='static/images/room.png'
           @click="openDialogFull('EnterRoom', $store.state.auth.user.id)"
@@ -54,14 +59,16 @@ v-container.my-porch(
         ) Use Lift
     v-flex(d-flex xs3)
       v-card
-        v-card-text {{data.members[3].isempty ? "Empty Room" : data.members[3].name + "'s Room"}}
+        v-card-text
+          span(:style="randStyle(data.members[3].isempty)") {{data.members[3].isempty ? "Empty Room" : data.members[3].name + "'s Room"}}
         img(
           :src='doorPic(data.members[3].isempty)'
           @click="openDialogFull('EnterRoom', data.members[3].id)"
         )
     v-flex(d-flex xs3 offset-xs2)
       v-card
-        v-card-text {{data.members[4].isempty ? "Empty Room" : data.members[4].name + "'s Room"}}
+        v-card-text
+          span(:style="randStyle(data.members[4].isempty)") {{data.members[4].isempty ? "Empty Room" : data.members[4].name + "'s Room"}}
         img(
           :src='doorPic(data.members[4].isempty)'
           @click="openDialogFull('EnterRoom', data.members[4].id)"
@@ -75,7 +82,8 @@ v-container.my-porch(
         ) Write a Message
     v-flex(d-flex xs3)
       v-card
-        v-card-text {{data.members[5].isempty ? "Empty Room" : data.members[5].name + "'s Room"}}
+        v-card-text
+          span(:style="randStyle(data.members[5].isempty)") {{data.members[5].isempty ? "Empty Room" : data.members[5].name + "'s Room"}}
         img(
           :src='doorPic(data.members[5].isempty)'
           @click="openDialogFull('EnterRoom', data.members[5].id)"
@@ -157,7 +165,8 @@ export default {
         checkMessage: value => {
           if (!value || value.trim() === '') {
             this.messageValid = false
-            return 'Required.'
+            // return 'Required.'
+            return true
           } else if (value.length > 200) {
             this.messageValid = false
             return 'Max 200 characters'
@@ -214,6 +223,8 @@ export default {
               this.messageDialogActive = true || error
             })
         }
+      } else {
+        api.showMessage('Message Content required.')
       }
     },
 
@@ -262,6 +273,24 @@ export default {
       return api.doorPic(state)
     },
 
+    randStyle (flag) {
+      let style = {
+        color: flag ? 'black' : api.randomColor(),
+        fontWeight: 'bold',
+        fontSize: '15px'
+      }
+      return style
+    },
+
+    floorStyle () {
+      let style = {
+        color: api.randomColor(),
+        fontWeight: 'bold',
+        fontSize: '20px'
+      }
+      return style
+    },
+
     openDialogFull (comp, id) {
       if (comp === 'EnterRoom') this.dialogFullComp = EnterRoom
       if (id) {
@@ -286,5 +315,11 @@ export default {
 
   .picker__title
     display: none !important
+
+  &__empty
+    color: black
+
+  &__occupied
+    color: red
 
 </style>

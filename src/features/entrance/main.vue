@@ -19,7 +19,7 @@
               img(src='~/@/assets/images/logo-name.svg' alt='AMazeInn')
           v-flex(xs12)
             .my-entrance__subheading.subheading
-              | Welcome to AMazeInn!
+              span(:style='logoStyle()') Welcome to AMazeInn!
           v-flex(xs12)
             v-card.my-entrance__card
               v-card-title.my-entrance__card-title(primary-title)
@@ -69,8 +69,8 @@ export default {
   data () {
     return {
       credentials: {
-        username: 'mocker',
-        password: '111111111'
+        username: '',
+        password: ''
       },
       nameInvalid: false,
       passwordInvalid: false,
@@ -119,6 +119,15 @@ export default {
         redirect = redirect.slice(1)
       }
       return redirect
+    },
+
+    logoStyle () {
+      let style = {
+        color: 'green',
+        fontWeight: 'bold',
+        fontSize: '15px'
+      }
+      return style
     },
 
     guestCheckin () {

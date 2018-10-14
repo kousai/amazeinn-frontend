@@ -65,9 +65,9 @@ export default {
     return {
       loading: false,
       oops: false,
-      oldPassword: '111111111',
-      newPassword: '111111111',
-      newRepeat: '111111111',
+      oldPassword: '',
+      newPassword: '',
+      newRepeat: '',
       oldPasswordHidden: true,
       newPasswordHidden: true,
       newRepeatHidden: true,
