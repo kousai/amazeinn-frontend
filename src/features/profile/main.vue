@@ -20,25 +20,15 @@ v-container(fluid fill-height style="padding: 0;")
     )
 
       v-layout(v-show="showPage" row wrap)
-
-        v-flex(d-flex xs12)
-
-        // Column left
-        v-flex(d-flex xs12 md3 lg4)
-
-        // Column right
-        v-flex(d-flex xs12 md6 lg4)
+        v-flex(d-flex xs12 sm12 md6 offset-md3)
           v-layout(column)
             v-flex(d-flex)
               v-card
                 v-card-text
                   v-layout
                     v-flex
-                      img.app-avatar(
-                        :src='avatarLink'
-                        height='100'
-                        width='100'
-                      )
+                      v-avatar(size='150')
+                        img(:src='avatarLink')
                       br
                       v-btn(
                         outline
@@ -47,11 +37,18 @@ v-container(fluid fill-height style="padding: 0;")
                       ) Update Avatar
 
                     v-flex.px-2
-                      | {{ profile.name }}
+                      h2.my-profile__name {{ profile.name }}
                       br
-                      | Joined: {{profile.created_on | formateDate}}
-                      br
-                      | Last login: {{profile.last_login | formateDate}}
+                      v-divider
+                      v-list(two-line)
+                        v-list-tile
+                          v-list-tile-content
+                            v-list-tile-title Joined:
+                            v-list-tile-sub-title {{profile.created_on | formateDate}}
+                        v-list-tile
+                          v-list-tile-content
+                            v-list-tile-title Last login:
+                            v-list-tile-sub-title {{profile.last_login | formateDate}}
 
             v-flex(d-flex)
               v-card(flat)
@@ -306,7 +303,7 @@ export default {
   data () {
     return {
       loading: false,
-      showPage: true,
+      showPage: false,
       oops: false,
       active: 'profile',
       uploadDialogActive: false,
@@ -352,7 +349,7 @@ export default {
       },
       rules: {
         checkNickname: value => {
-          if (!value || value === '') {
+          if (!value || value.trim() === '') {
             this.nicknameValid = false
             return 'Required.'
           } else if (value.length > 20) {
@@ -383,7 +380,7 @@ export default {
           }
         },
         checkIntro: value => {
-          if (!value || value === '') {
+          if (!value || value.trim() === '') {
             this.introValid = false
             return 'Required.'
           } else if (value.length > 100) {
@@ -430,9 +427,10 @@ export default {
             const user = this.$store.state.auth
             user.user.avatar = this.profile.avatar
             this.$store.dispatch('auth/update', user)
+            this.showPage = true
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.showPage = false && error
           })
       }
     },
@@ -529,7 +527,7 @@ export default {
             }
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.isEditSuccess = false && error
           })
       }
     },
@@ -562,4 +560,7 @@ export default {
     &__mobile-tabs
       .tabs__item--active
         color: $app-primary
+
+    &__name
+      color: green
 </style>

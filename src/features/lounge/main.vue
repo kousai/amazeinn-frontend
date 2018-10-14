@@ -6,45 +6,73 @@
   v-tabs.elevation-0(dark v-model="active" color="primary")
     v-tab(ripple) Popular Guests
     v-tab-item
-      v-layout(row wrap)
-        v-flex(d-flex xs12 sm12 md6)
-          v-card(v-if="!guests")
-          v-card(v-else-if="guests.length == 0")
-            v-list
-              v-list-tile No Guests
+      v-layout(v-show="showGuestsPage" row)
+        v-flex(d-flex xs12 sm12 md4 offset-md4)
+          v-card(v-if="guests.length == 0")
+            v-list(subheader)
+              v-subheader No Guests
           v-card(v-else)
-            v-list(v-for="n in guests.length" :key="n")
-              v-list-tile Name: {{ guests[n-1].name }}
-              v-list-tile Gender: {{ guests[n-1].gender }}
-              v-list-tile avatar:
-                img(
-                  :src='avatarLink(guests[n-1].avatar,guests[n-1].gender)'
-                  @click="openDialogFull('EnterRoom', guests[n-1].id)"
-                  height='100'
-                  width='100'
-                )
-              v-list-tile Followers num: {{ guests[n-1].follower_num }}
+            v-list(subheader three-line)
+              v-subheader Top 6
+              template(
+                v-for="guest in guests"
+              )
+                v-list-tile(avatar)
+                  v-badge(
+                    :color="genderColor(guest.gender)"
+                    bottom
+                    left
+                    overlap
+                  )
+                    span(slot="badge") {{ guest.follower_num }}
+                    v-list-tile-avatar(
+                      size='60'
+                    )
+                      img(:src='avatarLink(guest.avatar, guest.gender)')
+                  v-list-tile-content
+                    v-list-tile-title {{guest.name}}
+                  v-list-tile-action
+                    v-icon(
+                      v-if='guest.id !== $store.state.auth.user.id'
+                      color='primary'
+                      @click="openDialogFull('EnterRoom', guest.id)"
+                    ) arrow_forward_ios
+                v-divider
     v-tab(ripple) Popular Messages
     v-tab-item
-      v-layout(row wrap)
-        v-flex(d-flex xs12 sm12 md6)
-          v-card(v-if="!messages")
-          v-card(v-else-if="messages.length == 0")
-            v-list
-              v-list-tile No Messages
+      v-layout(v-show="showMessagesPage" row)
+        v-flex(d-flex xs12 sm12 md6 offset-md3)
+          v-card(v-if="messages.length == 0")
+            v-list(subheader)
+              v-subheader No Messages
           v-card(v-else)
-            v-list(v-for='n in messages.length' :key='n')
-              v-list-tile {{ 'No.' + n + ' ' + messages[n-1].content }}
-              v-list-tile -------------------- By: {{ messages[n-1].name }}
-              v-list-tile Send Time: {{ messages[n-1].send_time | formateDate }}
-              v-list-tile {{ messages[n-1].liked_count }}
-              v-list-tile avatar:
-                img(
-                  :src='avatarLink(messages[n-1].avatar,messages[n-1].gender)'
-                  @click="openDialogFull('EnterRoom', messages[n-1].guest_id)"
-                  height='100'
-                  width='100'
-                )
+            v-list(subheader three-line)
+              v-subheader Top 6
+              template(
+                v-for="message in messages"
+              )
+                v-list-tile(avatar)
+                  v-badge(
+                    :color="genderColor(message.gender)"
+                    bottom
+                    left
+                    overlap
+                  )
+                    span(slot="badge") {{ message.liked_count }}
+                    v-list-tile-avatar(
+                      size='60'
+                    )
+                      img(:src='avatarLink(message.avatar, message.gender)')
+                  v-list-tile-content
+                    v-list-tile-title {{message.content}}
+                    v-list-tile-sub-title {{ message.send_time | formateDate }} ---- by. {{message.name}}
+                  v-list-tile-action
+                    v-icon(
+                      v-if='message.guest_id !== $store.state.auth.user.id'
+                      color='primary'
+                      @click="openDialogFull('EnterRoom', message.guest_id)"
+                    ) arrow_forward_ios
+                v-divider
   v-dialog(
     v-model="dialogFullActive"
     fullscreen
@@ -72,12 +100,17 @@ export default {
 
   data () {
     return {
-      guests: null,
-      messages: null,
+      guests: [],
+      messages: [],
       active: null,
+      showGuestsPage: false,
+      showMessagesPage: false,
       dialogFullActive: false,
       dialogFullComp: null
     }
+  },
+
+  computed: {
   },
 
   created () {
@@ -95,9 +128,10 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.guests = res.data.result
+            this.showGuestsPage = true
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.showGuestsPage = false && error
           })
       }
     },
@@ -111,9 +145,10 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.messages = res.data.result
+            this.showMessagesPage = true
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.showMessagesPage = false && error
           })
       }
     },
@@ -132,6 +167,10 @@ export default {
 
     avatarLink (avatar, gender) {
       return avatar || api.defaultAvatar(gender)
+    },
+
+    genderColor (gender) {
+      return api.genderColor(gender)
     }
   }
 }

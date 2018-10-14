@@ -146,7 +146,7 @@ export default {
       width: 300px
       position: absolute
       background-color: #B39DDB
-      background-image: url("../../static/images/buildings.png")
+      background-image: url("../assets/images/buildings.png")
       background-repeat: no-repeat
       background-attachment: fixed
       background-position: 95.5% 50%

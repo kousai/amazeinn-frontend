@@ -6,7 +6,6 @@
       v-toolbar-title Edit Password
 
     v-card-text(style="position: relative; max-width: 500px; margin: auto;")
-      loading(:loading="loading" :oops="oops")
       v-form
         v-text-field(
           label='Old Password'
@@ -126,6 +125,8 @@ export default {
     },
 
     editPassword () {
+      this.loading = true
+      this.oops = false
       var form = {
         oldPassword: this.oldPassword,
         newPassword: this.newPassword,
@@ -135,7 +136,7 @@ export default {
         instruction: JSON.stringify(form)
       }
       const header = ['edit-password', null]
-      if (!this.oldPasswordInvalid && !this.newPasswordInvalid && !this.newRepeatInvalid) {
+      if (!this.oldPasswordInvalid && !this.newPasswordInvalid && !this.newRepeatInvalid && (this.newPassword === this.newRepeat)) {
         this.btnLoading = true
         if (!auth.isValidLogin()) {
           auth.expiredLogin()
@@ -147,8 +148,7 @@ export default {
               api.showMessage('Change Password OK')
             })
             .catch((error) => {
-              this.btnLoading = false
-              api.showMessage(error)
+              this.btnLoading = false && error
             })
         }
       } else {

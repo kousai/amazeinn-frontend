@@ -6,48 +6,80 @@ v-container.my-porch(
   v-bind:grid-list-sm="$vuetify.breakpoint.smAndDown"
   v-bind:grid-list-lg="$vuetify.breakpoint.mdAndUp"
 )
-  v-layout(row wrap)
-    v-flex(
-      d-flex
-      xs12
-      sm12
-      md6)
+  v-layout(v-show="showPage" row wrap)
+    v-flex(d-flex xs3 offset-xs2)
       v-card
+        v-card-text {{data.members[0].isempty ? "Empty Room" : data.members[0].name + "'s Room"}}
+        img(
+          :src='doorPic(data.members[0].isempty)'
+          @click="openDialogFull('EnterRoom', data.members[0].id)"
+        )
+    v-flex(d-flex xs2)
+      v-card(flat)
+        v-card-text Floor# {{ data.game_floor }}
+    v-flex(d-flex xs3)
+      v-card
+        v-card-text {{data.members[1].isempty ? "Empty Room" : data.members[1].name + "'s Room"}}
+        img(
+          :src='doorPic(data.members[1].isempty)'
+          @click="openDialogFull('EnterRoom', data.members[1].id)"
+        )
+    v-flex(d-flex xs3)
+      v-card
+        v-card-text {{data.members[2].isempty ? "Empty Room" : data.members[2].name + "'s Room"}}
+        img(
+          :src='doorPic(data.members[2].isempty)'
+          @click="openDialogFull('EnterRoom', data.members[2].id)"
+        )
+    v-flex(d-flex xs2)
+      v-card(flat)
+        v-btn(
+          color='success'
+          :loading="firstLoading"
+          @click='toFloor1()'
+        ) To Floor#1
+    v-flex(d-flex xs2)
+      v-card
+        v-card-text My Room
         img(
           src='static/images/room.png'
           @click="openDialogFull('EnterRoom', $store.state.auth.user.id)"
         )
-        span My Room
+    v-flex(d-flex xs2)
+      v-card(flat)
+        v-btn(
+          color='info'
+          :loading="liftLoading"
+          @click='useLift()'
+        ) Use Lift
+    v-flex(d-flex xs3)
+      v-card
+        v-card-text {{data.members[3].isempty ? "Empty Room" : data.members[3].name + "'s Room"}}
+        img(
+          :src='doorPic(data.members[3].isempty)'
+          @click="openDialogFull('EnterRoom', data.members[3].id)"
+        )
+    v-flex(d-flex xs3 offset-xs2)
+      v-card
+        v-card-text {{data.members[4].isempty ? "Empty Room" : data.members[4].name + "'s Room"}}
+        img(
+          :src='doorPic(data.members[4].isempty)'
+          @click="openDialogFull('EnterRoom', data.members[4].id)"
+        )
+    v-flex(d-flex xs2)
+      v-card(flat)
         v-btn(
           outline
           color="info"
           @click="messageDialogActive=true"
         ) Write a Message
-    v-btn(
-      color='info'
-      :loading="liftLoading"
-      @click='useLift()'
-    ) Use Lift
-    v-btn(
-      color='success'
-      :loading="firstLoading"
-      @click='toFloor1()'
-    ) To Floor#1
-    span Floor# {{ data.game_floor }}
-    v-spacer
-    v-flex(
-      v-for="n in data.members.length"
-      :key="n"
-      d-flex
-      xs12
-      sm12
-      md6)
+    v-flex(d-flex xs3)
       v-card
+        v-card-text {{data.members[5].isempty ? "Empty Room" : data.members[5].name + "'s Room"}}
         img(
-          :src='data.members[n-1].isempty ? "static/images/empty.png" : "static/images/door.png"'
-          @click="openDialogFull('EnterRoom', data.members[n-1].id)"
+          :src='doorPic(data.members[5].isempty)'
+          @click="openDialogFull('EnterRoom', data.members[5].id)"
         )
-        span {{data.members[n-1].isempty ? "Empty Room" : data.members[n-1].name + "'s Room"}}
 
     v-dialog(
       v-model='messageDialogActive'
@@ -56,7 +88,7 @@ v-container.my-porch(
     )
       v-card
         v-card-title
-          span Write a Message
+          span(class="headline") Write a Message
         v-card-text
           v-form
             v-textarea(
@@ -78,7 +110,7 @@ v-container.my-porch(
               v-icon(dark right) edit
         v-card-actions
           v-spacer
-          v-btn(color='primary' flat='' @click.stop='exit()') Close
+          v-btn(color='primary' flat='' @click.native='exit()') Close
     v-dialog(
       v-model="dialogFullActive"
       fullscreen
@@ -112,16 +144,18 @@ export default {
           {id: null, name: null, gender: null, avatar: null, isempty: true},
           {id: null, name: null, gender: null, avatar: null, isempty: true}]
       },
+      showPage: false,
       newMessage: '',
       messageValid: false,
       messageDialogActive: false,
+      messageError: false,
       dialogFullActive: false,
       dialogFullComp: null,
       liftLoading: false,
       firstLoading: false,
       rules: {
         checkMessage: value => {
-          if (!value || value === '') {
+          if (!value || value.trim() === '') {
             this.messageValid = false
             return 'Required.'
           } else if (value.length > 200) {
@@ -151,9 +185,10 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.data = res.data.result
+            this.showPage = true
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.showPage = false && error
           })
       }
     },
@@ -176,7 +211,7 @@ export default {
               this.newMessage = ''
             })
             .catch((error) => {
-              api.showMessage(error)
+              this.messageDialogActive = true || error
             })
         }
       }
@@ -200,8 +235,7 @@ export default {
             this.liftLoading = false
           })
           .catch((error) => {
-            this.liftLoading = false
-            api.showMessage(error)
+            this.liftLoading = false && error
           })
       }
     },
@@ -219,10 +253,13 @@ export default {
             this.firstLoading = false
           })
           .catch((error) => {
-            this.firstLoading = false
-            api.showMessage(error)
+            this.firstLoading = false && error
           })
       }
+    },
+
+    doorPic (state) {
+      return api.doorPic(state)
     },
 
     openDialogFull (comp, id) {

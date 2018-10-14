@@ -9,7 +9,8 @@
       dense
     )
       v-btn(icon)
-        img.my-entrance__logo(src='~/@/assets/images/logo.svg' alt='VueAMazeInn Logo')
+        img.my-entrance__logo(src='~/@/assets/images/logo.png' alt='VueAMazeInn Logo')
+
     v-layout(justify-center align-center)
       v-flex.text-xs-center(xs12 lg6)
         v-layout(row wrap)
@@ -45,20 +46,17 @@
 
               v-card-actions.my-entrance__card-actions
                 v-btn(
-                  :loading="checkinLoading"
-                  @click="guestCheckin()"
+                  :loading="isEnterAction ?  enterLoading : checkinLoading"
+                  @click="isEnterAction ? guestEnter() : guestCheckin()"
                   block
                   color='accent'
                   dark
-                ) Check-in
-              v-card-actions.my-entrance__card-actions
-                v-btn(
-                  :loading="enterLoading"
-                  @click="guestEnter()"
-                  block
-                  color='accent'
-                  dark
-                ) Login
+                ) {{isEnterAction ? "Enter" : "Check-in"}}
+              span Or
+              v-spacer
+              a(
+                @click="isEnterAction=!isEnterAction"
+              ) {{isEnterAction ? "Check-in" : "Enter"}}
 </template>
 
 <script>
@@ -77,6 +75,7 @@ export default {
       nameInvalid: false,
       passwordInvalid: false,
       passwordHidden: true,
+      isEnterAction: true,
       checkinLoading: false,
       enterLoading: false
     }
@@ -132,6 +131,7 @@ export default {
         api.publicRequest(api.checkinConfig(JSON.stringify(credentials)))
           .then(res => {
             this.checkinLoading = false
+            this.isEnterAction = true
             api.showMessage('Checkin OK, ' + this.credentials.username + '. Please enter your Room.')
           })
           .catch((error) => {
@@ -173,7 +173,7 @@ export default {
 
 <style lang="stylus" scoped>
   .my-entrance
-    background-image: $app-login-image
+    background-image: $app-enter-image
     background-size: 100% 100%
 
     &__logo

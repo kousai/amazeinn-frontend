@@ -7,9 +7,9 @@ v-container.my-support(
   v-bind:grid-list-lg="$vuetify.breakpoint.mdAndUp"
 )
   v-layout(row wrap)
-    v-flex(d-flex xs12 sm12 md6)
+    v-flex(d-flex xs12 sm12 md6 offset-md3)
       v-card
-        v-card-media(src="static/images/afternoon.png" height="300px")
+        v-card-media(src="static/images/afternoon.jpg" height="300px")
           v-layout.my-support__media(column)
             v-card-title(class="white--text pl-5 pt-5")
               .display-1.pl-5.pt-5 Contact Us

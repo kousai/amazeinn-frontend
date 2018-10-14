@@ -1,68 +1,170 @@
 <template lang="pug">
   v-card.my-room(tile)
     v-toolbar(card dark color="primary")
-      v-btn(icon @click.native="isActive = false" dark)
+      v-btn(icon @click.native="exit()" dark)
         v-icon close
-      v-toolbar-title Room
+      v-toolbar-title {{ data.name }}'s Room
 
-    v-card-text(style="position: relative; max-width: 500px; margin: auto;")
+    v-card-text
       loading(:loading="loading" :oops="oops")
-      v-layout(row wrap)
-        v-flex(d-flex xs12 sm12 md6)
-          v-card
-            v-list
-              v-list-tile Name: {{ data.name }}
-              v-list-tile(v-if='followLabel') Follow:
-                v-btn(
-                  @click="followGuest()"
-                  block
-                  dark
-                  :color='followColor'
-                ) {{followText}}
-              v-list-tile Nickname: {{ data.nickname || 'No Nickname' }}
-              v-list-tile gender: {{ data.gender }}
-              v-list-tile email: {{ data.email || 'No Email' }}
-              v-list-tile country: {{ data.country || 'In Secret'}}
-              v-list-tile intro: {{ data.intro || 'No Introduction' }}
-              v-list-tile avatar:
-                img(:src='avatarLink')
-              v-list-tile bgmusic: {{ data.bg_music }}
-                audio(
-                  :src='bgmLink'
-                  autoplay
-                  controls
-                  loop
-                )
-              v-list-tile bgimage: {{ data.bg_image }}
-              v-list-tile Follow num: {{ data.follow_num }}
-              v-list-tile Follower num: {{ data.follower_num }}
-              v-list-tile Liked num: {{ data.liked_num }}
-              v-list-tile Like times: {{ data.like_times }}
-              v-list-tile Message num: {{ data.message_num }}
-              v-list-tile Recent Message:
-                v-card(v-if="!data.message")
-                  v-list
-                    v-list-tile No Message
-                v-card(v-else)
-                  v-list
-                    v-list-tile Content: {{ data.message.content }}
-                    v-list-tile(v-if='followLabel') Thumb:
+      v-layout(v-show="showPage" row)
+        v-flex(d-flex xs12 sm12 md6 offset-md3)
+          v-layout(column)
+            v-flex(d-flex)
+              v-card
+                v-card-media(:src="bgImgLink" height="300px")
+            v-flex(d-flex)
+              v-card
+                v-card-text
+                  v-layout
+                    v-flex
+                      v-avatar(tile size='100')
+                        img.my-room__avatar(
+                          :src='avatarLink'
+                        )
+                    v-flex.px-2
+                      h2 {{ data.name }}
                       v-btn(
-                        @click="thumbUp()"
+                        v-if='followLabel'
+                        @click="followGuest()"
                         block
                         dark
-                        :depressed='data.message.label===0'
-                        color='success'
-                      ) Thumb-Up
-                      v-btn(
-                        @click="thumbDown()"
-                        block
-                        dark
-                        :depressed='data.message.label===1'
-                        color='error'
-                      ) Thumb-Down
-                    v-list-tile Send Time: {{ data.message.send_time | formateDate }}
-                    v-list-tile Liked Count: {{ data.message.liked_count }}
+                        :color='followColor'
+                      ) {{followText}}
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Nickname
+                v-card-text
+                  v-layout(style="align-items: center;")
+                    v-flex
+                      span {{ data.nickname || 'No Nickname' }}
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Gender
+                v-card-text
+                  v-layout(style="align-items: center;")
+                    v-flex
+                      span {{ data.gender }}
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Email
+                v-card-text
+                  v-layout(style="align-items: center;")
+                    v-flex
+                      span {{ data.email || 'No Email' }}
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Country
+                v-card-text
+                  v-layout(style="align-items: center;")
+                    v-flex
+                      span {{ data.country || 'In Secret'}}
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Introduction
+                v-card-text
+                  v-layout(style="align-items: center;")
+                    v-flex
+                      span {{ data.intro || 'No Introduction' }}
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Recent Message
+                v-card-text
+                  v-layout(style="align-items: center;")
+                    v-flex
+                      span(v-if="!data.message") No Message
+                      v-card(
+                        v-if="data.message_num > 0"
+                      )
+                        v-list
+                          v-list-tile(avatar)
+                            v-list-tile-avatar(
+                              size='30'
+                              :color="genderColor(data.gender)"
+                            )
+                              span.my-messages__count(v-text='likeCount(data.message.liked_count)')
+                            v-list-tile-content
+                              v-list-tile-title {{data.message.content}}
+                              v-list-tile-sub-title {{ data.message.send_time | formateDate }}
+                            v-list-tile-action.text-xs-right(v-if='followLabel')
+                              v-btn(
+                                @click="thumbUp()"
+                                block
+                                dark
+                                :depressed='data.message.label===0'
+                                color='success'
+                              ) Thumb-Up
+                              v-btn(
+                                @click="thumbDown()"
+                                block
+                                dark
+                                :depressed='data.message.label===1'
+                                color='error'
+                              ) Thumb-Down
+            v-flex(d-flex)
+              v-card(flat)
+                v-card-title
+                  .title Popular Degree
+                v-card-text
+                  v-layout(row wrap)
+                    v-flex(xs3)
+                      .sub-title Follows
+                    v-flex(xs3)
+                      .sub-title Followers
+                    v-flex(xs3)
+                      .sub-title Liked
+                    v-flex(xs3)
+                      .sub-title Messages
+                    v-flex(d-flex xs3)
+                      v-progress-circular(
+                        :size="100"
+                        :width="15"
+                        :rotate="360"
+                        :value="numberArc(data.follow_num)"
+                        color="error"
+                      )
+                        | {{ data.follow_num }}
+
+                    v-flex(d-flex xs3)
+                      v-progress-circular(
+                        :size="100"
+                        :width="15"
+                        :rotate="360"
+                        :value="numberArc(data.follower_num)"
+                        color="success"
+                      )
+                        | {{ data.follower_num }}
+
+                    v-flex(d-flex xs3)
+                      v-progress-circular(
+                        :size="100"
+                        :width="15"
+                        :rotate="360"
+                        :value="numberArc(data.liked_num)"
+                        color="primary"
+                      )
+                        | {{ data.liked_num }}
+                    v-flex(d-flex xs3)
+                      v-progress-circular(
+                        :size="100"
+                        :width="15"
+                        :rotate="360"
+                        :value="numberArc(data.message_num)"
+                        color="info"
+                      )
+                        | {{ data.message_num }}
+      audio(
+        ref='roomAudio'
+        :src='bgmLink'
+        autoplay
+        loop
+      )
 </template>
 
 <script>
@@ -111,6 +213,7 @@ export default {
       },
       label: false,
       loading: false,
+      showPage: false,
       oops: false
     }
   },
@@ -129,6 +232,9 @@ export default {
     },
     bgmLink () {
       return this.data.bg_music || 'static/music/0.mp3'
+    },
+    bgImgLink () {
+      return this.data.bg_Image || 'static/images/bg0.jpg'
     },
     followLabel () {
       return store.state.room.id !== store.state.auth.user.id
@@ -152,10 +258,14 @@ export default {
   methods: {
 
     createRoom (newValue, oldValue) {
-      this.enterRoom()
+      if (newValue) {
+        this.enterRoom()
+      }
     },
 
     enterRoom () {
+      this.loading = true
+      this.oops = false
       var form = {
         id: store.state.room.id
       }
@@ -176,11 +286,35 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(data), header))
           .then(res => {
             this.data = res.data.result
+            this.showPage = true
+            this.loading = false
+            var audio = this.$refs.roomAudio
+            audio.play()
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.oops = true
+            this.loading = false && error
           })
       }
+    },
+
+    exit () {
+      var audio = this.$refs.roomAudio
+      audio.pause()
+      audio.currentTime = 0
+      this.isActive = false
+    },
+
+    genderColor (gender) {
+      return api.genderColor(gender)
+    },
+
+    likeCount (liked) {
+      return api.likeCount(liked)
+    },
+
+    numberArc (num) {
+      return num * 5
     },
 
     followGuest () {
@@ -273,4 +407,13 @@ export default {
 <style lang="stylus" scoped>
 .my-room
   height: 100%
+
+  &__avatar
+    border-style: solid
+    border-color: gray
+    position: relative
+
+  &__count
+    color: white
+
 </style>

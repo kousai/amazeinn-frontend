@@ -20,14 +20,7 @@ v-container(fluid fill-height style="padding: 0;")
     )
 
       v-layout(row wrap)
-
-        v-flex(d-flex xs12)
-
-        // Column left
-        v-flex(d-flex xs12 md3 lg4)
-
-        // Column right
-        v-flex(d-flex xs12 md6 lg4)
+        v-flex(d-flex xs12 sm12 md6 offset-md3)
           v-layout(column)
             v-flex(d-flex)
               v-card(flat)

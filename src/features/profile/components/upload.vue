@@ -1,7 +1,7 @@
 <template lang="pug">
   v-card
     v-card-title
-      span Update {{uploadLabel[0]}}
+      span(class="headline") Update {{uploadLabel[0]}}
     v-card-text
       v-form
         | You can input a link of {{uploadLabel[1]}}
@@ -32,12 +32,16 @@
         | You can also upload a local {{uploadLabel[2]}}
         br
         br
-        input(
-          ref='uploadLocal'
+        span.my-room__input_dom(
           v-if='uploadInput'
-          type="file"
-          accept="image/gif, image/jpeg, image/png"
         )
+          span {{selectHint}}
+          input.my-room__input_file(
+            ref='uploadLocal'
+            type="file"
+            :accept="acceptType"
+            @change="selectFile()"
+          )
         v-btn(
           :loading="uploadLoading"
           @click="uploadFlag ? chooseUpload() : uploadFile()"
@@ -80,6 +84,7 @@ export default {
       urlText: false,
       urlClick: true,
       urlChange: false,
+      selectHint: 'SELECT FILE',
       uploadLoading: false,
       uploadInput: false,
       uploadFlag: true,
@@ -121,6 +126,22 @@ export default {
           break
       }
       return res
+    },
+
+    acceptType () {
+      var res = ''
+      switch (this.label) {
+        case 'avatar':
+          res = 'image/gif, image/jpeg, image/png'
+          break
+        case 'bg_image':
+          res = 'image/gif, image/jpeg, image/png'
+          break
+        case 'bg_music':
+          res = 'audio/mpeg, audio/ogg'
+          break
+      }
+      return res
     }
   },
 
@@ -139,6 +160,7 @@ export default {
       this.uploadFlag = true
       this.uploadLoading = false
       this.isSuccess = false
+      this.selectHint = 'SELECT FILE'
     },
 
     exit () {
@@ -146,12 +168,32 @@ export default {
       this.initDialog()
     },
 
-    urlCheck () {
+    imageCheck () {
       var patt = /^(http[s]?:\/\/|ftp:\/\/|).*?\/.*?\.(jpg|png|gif)$/i
       if (patt.test(this.urlLink)) {
         return true
       } else {
         return 'Invalid image url'
+      }
+    },
+
+    musicCheck () {
+      var patt = /^(http[s]?:\/\/|ftp:\/\/|).*?\/.*?\.(mp3|ogg)$/i
+      if (patt.test(this.urlLink)) {
+        return true
+      } else {
+        return 'Invalid Music url'
+      }
+    },
+
+    urlCheck () {
+      switch (this.label) {
+        case 'avatar':
+          return this.imageCheck()
+        case 'bg_image':
+          return this.imageCheck()
+        case 'bg_music':
+          return this.musicCheck()
       }
     },
 
@@ -161,6 +203,7 @@ export default {
       this.urlClick = false
       this.uploadInput = false
       this.uploadFlag = true
+      this.selectHint = 'SELECT FILE'
     },
 
     chooseUpload () {
@@ -169,6 +212,7 @@ export default {
       this.urlClick = true
       this.uploadInput = true
       this.uploadFlag = false
+      this.selectHint = 'SELECT FILE'
     },
 
     changeUrl () {
@@ -188,8 +232,19 @@ export default {
             this.isSuccess = true
           })
           .catch((error) => {
-            api.showMessage(error)
+            this.isActive = true || error
           })
+      }
+    },
+
+    selectFile () {
+      this.isSuccess = false
+      let inputDOM = this.$refs.uploadLocal
+      let files = inputDOM.files
+      if (files.length === 0) {
+        this.selectHint = 'SELECT FILE'
+      } else {
+        this.selectHint = 'You have Chosen one'
       }
     },
 
@@ -216,8 +271,7 @@ export default {
             this.isSuccess = true
           })
           .catch((error) => {
-            this.uploadLoading = false
-            api.showMessage(error)
+            this.uploadLoading = false && error
           })
       }
     }
@@ -228,4 +282,33 @@ export default {
 <style lang="stylus" scoped>
 .my-room
   height: 100%
+
+  &__input_dom
+    position: relative
+    display: inline-block
+    width: 100%
+    text-align: center
+    background: #00B55F
+    border: 1px solid #3CB371
+    border-radius: 4px
+    padding: 4px 12px
+    overflow: hidden
+    color: white
+    font-weight: bold
+    text-decoration: none
+    text-indent: 0
+    line-height: 30px
+    &:hover
+      background: gold
+      border-color: #D5CF1B
+      color: black
+      text-decoration: none
+
+  &__input_file
+    position: absolute
+    font-size: 100px
+    right: 0
+    top: 0
+    opacity: 0
+
 </style>

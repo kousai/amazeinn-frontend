@@ -169,6 +169,26 @@ export default {
     }
   },
 
+  doorPic (state) {
+    return state ? 'static/images/empty.png' : 'static/images/door.png'
+  },
+
+  genderColor (gender) {
+    if (gender === 'Male') return 'blue'
+    else if (gender === 'Female') return 'pink'
+    else return 'purple'
+  },
+
+  likeCount (liked) {
+    if (liked > 0) {
+      return '+' + liked
+    } else if (liked < 0) {
+      return '-' + liked
+    } else {
+      return liked
+    }
+  },
+
   formateDate (timestamp) {
     var date = new Date(timestamp * 1000)
     var Y = date.getFullYear() + '-'
