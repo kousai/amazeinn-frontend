@@ -10,29 +10,29 @@ v-container.my-porch(
     v-flex(d-flex xs3 offset-xs2)
       v-card
         v-card-text
-          span(:style="randStyle(data.members[0].isempty)") {{data.members[0].isempty ? "Empty Room" : data.members[0].name + "'s Room"}}
+          span(:style="styles[0]") {{data.members[0].isempty ? "Empty Room" : data.members[0].name + "'s Room"}}
         img(
-          :src='doorPic(data.members[0].isempty)'
+          :src='doors[0]'
           @click="openDialogFull('EnterRoom', data.members[0].id)"
         )
     v-flex(d-flex xs2)
       v-card(flat)
         v-card-text
-          span(:style="floorStyle()") Floor# {{ data.game_floor }}
+          span(:style="floorStyle") Floor# {{ data.game_floor }}
     v-flex(d-flex xs3)
       v-card
         v-card-text
-          span(:style="randStyle(data.members[1].isempty)") {{data.members[1].isempty ? "Empty Room" : data.members[1].name + "'s Room"}}
+          span(:style="styles[1]") {{data.members[1].isempty ? "Empty Room" : data.members[1].name + "'s Room"}}
         img(
-          :src='doorPic(data.members[1].isempty)'
+          :src='doors[1]'
           @click="openDialogFull('EnterRoom', data.members[1].id)"
         )
     v-flex(d-flex xs3)
       v-card
         v-card-text
-          span(:style="randStyle(data.members[2].isempty)") {{data.members[2].isempty ? "Empty Room" : data.members[2].name + "'s Room"}}
+          span(:style="styles[2]") {{data.members[2].isempty ? "Empty Room" : data.members[2].name + "'s Room"}}
         img(
-          :src='doorPic(data.members[2].isempty)'
+          :src='doors[2]'
           @click="openDialogFull('EnterRoom', data.members[2].id)"
         )
     v-flex(d-flex xs2)
@@ -45,7 +45,7 @@ v-container.my-porch(
     v-flex(d-flex xs2)
       v-card
         v-card-text
-          span(:style="randStyle(false)") My Room
+          span(:style="styles[6]") My Room
         img(
           src='static/images/room.png'
           @click="openDialogFull('EnterRoom', $store.state.auth.user.id)"
@@ -60,17 +60,17 @@ v-container.my-porch(
     v-flex(d-flex xs3)
       v-card
         v-card-text
-          span(:style="randStyle(data.members[3].isempty)") {{data.members[3].isempty ? "Empty Room" : data.members[3].name + "'s Room"}}
+          span(:style="styles[3]") {{data.members[3].isempty ? "Empty Room" : data.members[3].name + "'s Room"}}
         img(
-          :src='doorPic(data.members[3].isempty)'
+          :src='doors[3]'
           @click="openDialogFull('EnterRoom', data.members[3].id)"
         )
     v-flex(d-flex xs3 offset-xs2)
       v-card
         v-card-text
-          span(:style="randStyle(data.members[4].isempty)") {{data.members[4].isempty ? "Empty Room" : data.members[4].name + "'s Room"}}
+          span(:style="styles[4]") {{data.members[4].isempty ? "Empty Room" : data.members[4].name + "'s Room"}}
         img(
-          :src='doorPic(data.members[4].isempty)'
+          :src='doors[4]'
           @click="openDialogFull('EnterRoom', data.members[4].id)"
         )
     v-flex(d-flex xs2)
@@ -83,9 +83,9 @@ v-container.my-porch(
     v-flex(d-flex xs3)
       v-card
         v-card-text
-          span(:style="randStyle(data.members[5].isempty)") {{data.members[5].isempty ? "Empty Room" : data.members[5].name + "'s Room"}}
+          span(:style="styles[5]") {{data.members[5].isempty ? "Empty Room" : data.members[5].name + "'s Room"}}
         img(
-          :src='doorPic(data.members[5].isempty)'
+          :src='doors[5]'
           @click="openDialogFull('EnterRoom', data.members[5].id)"
         )
 
@@ -153,6 +153,7 @@ export default {
           {id: null, name: null, gender: null, avatar: null, isempty: true}]
       },
       showPage: false,
+      floorColor: '',
       newMessage: '',
       messageValid: false,
       messageDialogActive: false,
@@ -179,7 +180,43 @@ export default {
     }
   },
 
-  mounted () {
+  computed: {
+    styles () {
+      let styles = []
+      for (var i = 0; i < 6; i++) {
+        styles[i] = this.randStyle(this.data.members[i].isempty)
+      }
+      styles[6] = this.randStyle(false)
+      return styles
+    },
+
+    currentFloor () {
+      return this.data.game_floor
+    },
+
+    floorStyle () {
+      let style = {
+        color: this.floorColor,
+        fontWeight: 'bold',
+        fontSize: '20px'
+      }
+      return style
+    },
+
+    doors () {
+      let doors = []
+      for (var i = 0; i < 6; i++) {
+        doors[i] = api.doorPic(this.data.members[i].isempty)
+      }
+      return doors
+    }
+  },
+
+  watch: {
+    'currentFloor': 'changeFloorStyle'
+  },
+
+  created () {
     this.enterIndex()
   },
 
@@ -194,6 +231,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.data = res.data.result
+            this.floorColor = api.randomColor()
             this.showPage = true
           })
           .catch((error) => {
@@ -242,7 +280,7 @@ export default {
       } else {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
-            this.enterIndex()
+            this.data = res.data.result
             this.liftLoading = false
           })
           .catch((error) => {
@@ -260,17 +298,13 @@ export default {
       } else {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
-            this.enterIndex()
+            this.data = res.data.result
             this.firstLoading = false
           })
           .catch((error) => {
             this.firstLoading = false && error
           })
       }
-    },
-
-    doorPic (state) {
-      return api.doorPic(state)
     },
 
     randStyle (flag) {
@@ -282,13 +316,8 @@ export default {
       return style
     },
 
-    floorStyle () {
-      let style = {
-        color: api.randomColor(),
-        fontWeight: 'bold',
-        fontSize: '20px'
-      }
-      return style
+    changeFloorStyle (newVal, oldVal) {
+      this.floorColor = api.randomColor()
     },
 
     openDialogFull (comp, id) {
@@ -316,10 +345,11 @@ export default {
   .picker__title
     display: none !important
 
-  &__empty
-    color: black
+  &__card
+    position: relative
 
-  &__occupied
-    color: red
+  &__btn
+    position: absolute
+    top: 50%
 
 </style>
