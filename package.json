@@ -86,7 +86,8 @@
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.19.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "webpack-static-site-generator": "^1.2.3"
   },
   "engines": {
     "node": ">= 4.0.0",

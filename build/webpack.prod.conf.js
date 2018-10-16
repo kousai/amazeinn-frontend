@@ -11,6 +11,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+// const StaticSiteGenerator = require('webpack-static-site-generator')
 const loadMinified = require('./load-minified')
 
 const env = process.env.NODE_ENV === 'testing'
@@ -109,6 +110,17 @@ const webpackConfig = merge(baseWebpackConfig, {
       minify: true,
       stripPrefix: 'dist/'
     })
+    /*,
+    new StaticSiteGenerator(
+      // path to the output dir
+      path.join(__dirname, './dist'),
+      // array of routes to generate
+      [ '/', '/enterance', '/account', '/porch', '/lounge', '/profile', '/contacts', '/messages', '/support' ],
+      // [OPTIONAL] element (in querySelector style) to wait for before rendering.
+      // defaults to 'body'
+      '.main-container'
+    )
+    */
   ]
 })
 

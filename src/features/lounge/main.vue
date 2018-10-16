@@ -154,8 +154,8 @@ export default {
     },
 
     openDialogFull (comp, id) {
-      if (comp === 'EnterRoom') this.dialogFullComp = EnterRoom
       if (id) {
+        if (comp === 'EnterRoom') this.dialogFullComp = EnterRoom
         this.updateOwner(id)
         this.dialogFullActive = true
       }

@@ -12,7 +12,7 @@
           v-layout(column)
             v-flex(d-flex)
               v-card
-                v-card-media(:src="bgImgLink" height="300px")
+                v-card-media(:src="bgImgLink" width="600px" height="150px")
             v-flex(d-flex)
               v-card
                 v-card-text

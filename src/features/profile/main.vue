@@ -27,7 +27,7 @@ v-container(fluid fill-height style="padding: 0;")
                 v-card-text
                   v-layout
                     v-flex
-                      v-avatar(size='150')
+                      v-avatar(size='158')
                         img(:src='avatarLink')
                       br
                       v-btn(
@@ -44,11 +44,13 @@ v-container(fluid fill-height style="padding: 0;")
                         v-list-tile
                           v-list-tile-content
                             v-list-tile-title Joined:
-                            v-list-tile-sub-title {{profile.created_on | formateDate}}
+                            v-list-tile-sub-title {{profile.created_on | formateDate | firstLine}}
+                            v-list-tile-sub-title {{profile.created_on | formateDate | secondLine}}
                         v-list-tile
                           v-list-tile-content
                             v-list-tile-title Last login:
-                            v-list-tile-sub-title {{profile.last_login | formateDate}}
+                            v-list-tile-sub-title {{profile.last_login | formateDate | firstLine}}
+                            v-list-tile-sub-title {{profile.last_login | formateDate | secondLine}}
 
             v-flex(d-flex)
               v-card(flat)
@@ -209,7 +211,7 @@ v-container(fluid fill-height style="padding: 0;")
                 v-card-text
                   v-layout(style="align-items: center;")
                     v-flex
-                      span(
+                      div.my-profile__intro(
                         v-if='introLabel'
                       ) {{ profile.intro || 'No Introduction' }}
                       v-textarea(
@@ -243,11 +245,11 @@ v-container(fluid fill-height style="padding: 0;")
             v-flex(d-flex)
               v-card(flat)
                 v-card-title
-                  .title Your Room's Background Settings
+                  .title Background Settings
                 v-card-text
                   v-layout(style="align-items: center;")
                     v-flex
-                      | {{ profile.bg_music || 'No Background Music' }}
+                      | {{ profile.bg_music ? 'Background Music setted' : 'No Background Music' }}
                     v-flex.text-xs-right
                       v-btn(
                         flat
@@ -258,7 +260,7 @@ v-container(fluid fill-height style="padding: 0;")
                         v-icon edit
                   v-layout(style="align-items: center;")
                     v-flex
-                      | {{ profile.bg_image || 'No Background Image' }}
+                      | {{ profile.bg_image ? 'Background Image setted' : 'No Background Image' }}
                     v-flex.text-xs-right
                       v-btn(
                         flat
@@ -297,6 +299,14 @@ export default {
   filters: {
     formateDate: (timestamp) => {
       return api.formateDate(timestamp)
+    },
+
+    firstLine: (str) => {
+      return str.slice(0, 10)
+    },
+
+    secondLine: (str) => {
+      return str.slice(10, 19)
     }
   },
 
@@ -563,4 +573,8 @@ export default {
 
     &__name
       color: green
+
+    &__intro
+      word-wrap: break-word
+
 </style>
