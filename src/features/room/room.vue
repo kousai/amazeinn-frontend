@@ -234,7 +234,7 @@ export default {
       return this.data.bg_music || 'static/music/0.mp3'
     },
     bgImgLink () {
-      return this.data.bg_Image || 'static/images/bg0.jpg'
+      return this.data.bg_image || 'static/images/bg0.jpg'
     },
     followLabel () {
       return store.state.room.id !== store.state.auth.user.id
