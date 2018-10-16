@@ -23,12 +23,13 @@ v-container.my-porch(
         v-else-if="roomLabel[i-1]=='my-room'"
         height='75px'
       )
-        span(:style="styles[6]") My Room
-        img(
-          src='static/images/room.png'
-          width='60px'
-          @click="openDialogFull('EnterRoom', $store.state.auth.user.id)"
-        )
+        v-layout(column align-center justify-center)
+          span(:style="styles[6]") My Room
+          img(
+            src='static/images/room.png'
+            width='60px'
+            @click="openDialogFull('EnterRoom', $store.state.auth.user.id)"
+          )
       v-card.my-porch__wall(
         v-else-if="roomLabel[i-1]=='message'"
         height='75px'
@@ -69,12 +70,13 @@ v-container.my-porch(
         v-else-if="roomLabel[i-1].slice(0,5)=='room-'"
         height='75px'
       )
-        span(:style="styles[parseInt(roomLabel[i-1].charAt(5))]") {{data.members[parseInt(roomLabel[i-1].charAt(5))].isempty ? "Empty" : data.members[parseInt(roomLabel[i-1].charAt(5))].name}}
-        img(
-          :src='doors[parseInt(roomLabel[i-1].charAt(5))]'
-          width='60px'
-          @click="openDialogFull('EnterRoom', data.members[parseInt(roomLabel[i-1].charAt(5))].id)"
-        )
+        v-layout(column align-center justify-center)
+          span(:style="styles[parseInt(roomLabel[i-1].charAt(5))]") {{data.members[parseInt(roomLabel[i-1].charAt(5))].isempty ? "Empty" : data.members[parseInt(roomLabel[i-1].charAt(5))].name}}
+          img(
+            :src='doors[parseInt(roomLabel[i-1].charAt(5))]'
+            width='60px'
+            @click="openDialogFull('EnterRoom', data.members[parseInt(roomLabel[i-1].charAt(5))].id)"
+          )
 
     v-dialog(
       v-model='messageDialogActive'

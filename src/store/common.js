@@ -1,7 +1,7 @@
 // Common State.
 const defaults = {
   sidebar: {
-    visible: true
+    visible: false
   },
   title: '',
   layout: 'DefaultLayout',
@@ -14,11 +14,6 @@ const defaults = {
     text: '',
     timeout: 3000,
     color: ''
-  },
-  error: {
-    code: null,
-    level: null,
-    message: ''
   }
 }
 

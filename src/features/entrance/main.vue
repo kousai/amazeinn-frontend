@@ -167,6 +167,7 @@ export default {
             } else {
               auth.redirectPath('home')
             }
+            this.$store.dispatch('common/updateSidebar', { visible: true })
             api.showMessage('Welcome, ' + this.$store.state.auth.user.name)
           })
           .catch((error) => {
