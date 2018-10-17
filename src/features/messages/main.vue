@@ -4,7 +4,7 @@
   Appbar
 
   v-tabs.elevation-0(dark v-model="active" color="primary")
-    v-tab(ripple) My Messages
+    v-tab(ripple @click='pageInit("messages")') My Messages
     v-tab-item
       v-layout(v-show="showMessagesPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
@@ -13,7 +13,7 @@
               v-subheader No Messages
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Recent 6
+              v-subheader Messages List
               template(
                 v-for="message in messages"
               )
@@ -27,8 +27,16 @@
                     v-list-tile-title {{message.content}}
                     v-list-tile-sub-title {{ message.send_time | formateDate }}
                 v-divider
+            v-layout(align-center justify-center)
+              paginate(
+                v-model="messagePage"
+                :page-count="totalPage(messages)"
+                :no-li-surround="true"
+                :click-handler="clickCallback"
+                :container-class="'pagination'"
+              )
 
-    v-tab(ripple) Thumbs Up
+    v-tab(ripple @click='pageInit("thumbUps")') Thumbs Up
     v-tab-item
       v-layout(v-show="showThumbUpsPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
@@ -37,7 +45,7 @@
               v-subheader No Thumb-Ups
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Recent 6
+              v-subheader Thumb-Ups List
               template(
                 v-for="thumbUp in thumbUps"
               )
@@ -57,7 +65,15 @@
                       @click="openDialogFull('EnterRoom', thumbUp.guest_id)"
                     ) arrow_forward_ios
                 v-divider
-    v-tab(ripple) Thumbs Down
+            v-layout(align-center justify-center)
+              paginate(
+                v-model="thumbUpPage"
+                :page-count="totalPage(thumbUps)"
+                :no-li-surround="true"
+                :click-handler="clickCallback"
+                :container-class="'pagination'"
+              )
+    v-tab(ripple @click='pageInit("thumbDowns")') Thumbs Down
     v-tab-item
       v-layout(v-show="showThumbDownsPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
@@ -66,7 +82,7 @@
               v-subheader No Thumb-Downs
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Recent 6
+              v-subheader Thumb-Downs List
               template(
                 v-for="thumbDown in thumbDowns"
               )
@@ -86,6 +102,14 @@
                       @click="openDialogFull('EnterRoom', thumbDown.guest_id)"
                     ) arrow_forward_ios
                 v-divider
+            v-layout(align-center justify-center)
+              paginate(
+                v-model="thumbDownPage"
+                :page-count="totalPage(thumbDowns)"
+                :no-li-surround="true"
+                :click-handler="clickCallback"
+                :container-class="'pagination'"
+              )
 
   v-dialog(
     v-model="dialogFullActive"
@@ -103,9 +127,14 @@ import api from '@/auth/helpers'
 import auth from '@/auth/index'
 import store from '../room/store'
 import EnterRoom from '../room/room.vue'
+import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'Messages',
+
+  components: {
+    Paginate
+  },
 
   filters: {
     formateDate: (timestamp) => {
@@ -118,25 +147,48 @@ export default {
       messages: [],
       thumbUps: [],
       thumbDowns: [],
+      messageLists: [],
+      thumbUpLists: [],
+      thumbDownLists: [],
+      messagePage: 1,
+      thumbUpPage: 1,
+      thumbDownPage: 1,
+      limit: 6,
       active: null,
       showMessagesPage: false,
       showThumbUpsPage: false,
       showThumbDownsPage: false,
+      loading: false,
+      oops: false,
       dialogFullActive: false,
       dialogFullComp: null
     }
   },
 
   computed: {
+    loadingState () {
+      return this.showMessagesPage && this.showThumbUprsPage && this.showThumbDownsPage
+    }
+  },
+
+  watch: {
+    'loadingState': 'loadingChange'
   },
 
   created () {
     this.showMessages()
     this.showThumbUps()
     this.showThumbDowns()
+    this.pageInit('messages')
   },
 
   methods: {
+    loadingChange (newValue, oldValue) {
+      if (newValue) {
+        this.loading = false
+      }
+    },
+
     showMessages () {
       var form = {}
       const header = ['show-messages', null]
@@ -188,6 +240,41 @@ export default {
       }
     },
 
+    totalPage (arr) {
+      return Math.ceil(arr.length / this.limit)
+    },
+
+    pegination (arr, currentPage) {
+      let result = []
+      if (arr.length <= this.limit) {
+        result = arr
+      } else {
+        result = arr.slice(this.limit * (currentPage - 1), this.limit * currentPage)
+      }
+      return result
+    },
+
+    pageInit (str) {
+      const user = store.state.auth
+      user.user.paginate = str
+      store.dispatch('auth/update', user)
+    },
+
+    clickCallback (PageNum) {
+      const paginateType = store.state.auth.user.paginate
+      switch (paginateType) {
+        case 'messages':
+          this.messageLists = this.pegination(this.messages, PageNum)
+          break
+        case 'thumbUps':
+          this.thumbUpLists = this.pegination(this.thumbUps, PageNum)
+          break
+        case 'thumbDowns':
+          this.thumbDownLists = this.pegination(this.thumbDowns, PageNum)
+          break
+      }
+    },
+
     openDialogFull (comp, id) {
       if (id) {
         if (comp === 'EnterRoom') this.dialogFullComp = EnterRoom
@@ -217,9 +304,15 @@ export default {
 
 <style lang="stylus" scoped>
 .my-messages
-  height 100%
+  height: 100%
 
   &__count
     color: white
+
+.pagination
+  margin: 0em
+  display: inline-block
+  vertical-align: middle
+  font-size: 30px
 
 </style>

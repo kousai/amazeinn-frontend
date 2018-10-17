@@ -196,6 +196,7 @@ export default {
       img
         max-width: 200px
         width: 100%
+        margin-top: 30px
 
     &__subheading
       color: white

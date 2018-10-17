@@ -91,6 +91,7 @@ export default {
 
 <style lang="stylus">
   .my-account
+    height: 100%
 
     &__avatar-link
       padding-left: 10px

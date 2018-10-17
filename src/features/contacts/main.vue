@@ -3,18 +3,18 @@
 
   Appbar
   v-tabs.elevation-0(dark v-model="active" color="primary")
-    v-tab(ripple) I Followed
+    v-tab(ripple @click='pageInit("follows")') I Followed
     v-tab-item
       v-layout(v-show="showFollowsPage" row wrap)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
-          v-card(v-if="follows.length == 0")
+          v-card(v-if="followLists.length == 0")
             v-list(subheader)
               v-subheader No Follows
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Recent 6
+              v-subheader Follows List
               template(
-                v-for="follow in follows"
+                v-for="follow in followLists"
               )
                 v-list-tile(avatar)
                   v-list-tile-avatar(
@@ -30,8 +30,16 @@
                       @click="openDialogFull('EnterRoom', follow.id)"
                     ) arrow_forward_ios
                 v-divider
+            v-layout(align-center justify-center)
+              paginate(
+                v-model="followPage"
+                :page-count="totalPage(follows)"
+                :no-li-surround="true"
+                :click-handler="clickCallback"
+                :container-class="'pagination'"
+              )
 
-    v-tab(ripple) My Followers
+    v-tab(ripple @click='pageInit("followers")') My Followers
     v-tab-item
       v-layout(v-show="showFollowersPage" row wrap)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
@@ -40,7 +48,7 @@
               v-subheader No Followers
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Recent 6
+              v-subheader Followers List
               template(
                 v-for="follower in followers"
               )
@@ -58,6 +66,7 @@
                       @click="openDialogFull('EnterRoom', follower.id)"
                     ) arrow_forward_ios
                 v-divider
+
   v-dialog(
     v-model="dialogFullActive"
     fullscreen
@@ -74,9 +83,14 @@ import api from '@/auth/helpers'
 import auth from '@/auth/index'
 import store from '../room/store'
 import EnterRoom from '../room/room.vue'
+import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'Contacts',
+
+  components: {
+    Paginate
+  },
 
   filters: {
     formateDate: (timestamp) => {
@@ -88,6 +102,11 @@ export default {
     return {
       follows: [],
       followers: [],
+      followLists: [],
+      followerLists: [],
+      followPage: 1,
+      followerPage: 1,
+      limit: 6,
       active: null,
       showFollowsPage: false,
       showFollowersPage: false,
@@ -111,6 +130,7 @@ export default {
   created () {
     this.showFollows()
     this.showFollowers()
+    this.pageInit('follows')
   },
 
   methods: {
@@ -131,6 +151,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.follows = res.data.result
+            this.followLists = this.pegination(this.follows, 1)
             this.showFollowsPage = true
           })
           .catch((error) => {
@@ -151,12 +172,45 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.followers = res.data.result
+            this.followerLists = this.pegination(this.followers, 1)
             this.showFollowersPage = true
           })
           .catch((error) => {
             this.oops = true
             this.loading = false && error
           })
+      }
+    },
+
+    totalPage (arr) {
+      return Math.ceil(arr.length / this.limit)
+    },
+
+    pegination (arr, currentPage) {
+      let result = []
+      if (arr.length <= this.limit) {
+        result = arr
+      } else {
+        result = arr.slice(this.limit * (currentPage - 1), this.limit * currentPage)
+      }
+      return result
+    },
+
+    pageInit (str) {
+      const user = store.state.auth
+      user.user.paginate = str
+      store.dispatch('auth/update', user)
+    },
+
+    clickCallback (PageNum) {
+      const paginateType = store.state.auth.user.paginate
+      switch (paginateType) {
+        case 'follows':
+          this.followLists = this.pegination(this.follows, PageNum)
+          break
+        case 'followers':
+          this.followerLists = this.pegination(this.followers, PageNum)
+          break
       }
     },
 
@@ -185,6 +239,12 @@ export default {
 
 <style lang="stylus" scoped>
 .my-contacts
-  height 100%
+  height: 100%
+
+.pagination
+  margin: 0em
+  display: inline-block
+  vertical-align: middle
+  font-size: 30px
 
 </style>

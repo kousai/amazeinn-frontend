@@ -38,6 +38,7 @@
                       @click="openDialogFull('EnterRoom', guest.id)"
                     ) arrow_forward_ios
                 v-divider
+
     v-tab(ripple) Popular Messages
     v-tab-item
       v-layout(v-show="showMessagesPage" row)
@@ -73,6 +74,7 @@
                       @click="openDialogFull('EnterRoom', message.guest_id)"
                     ) arrow_forward_ios
                 v-divider
+
   v-dialog(
     v-model="dialogFullActive"
     fullscreen
@@ -88,9 +90,14 @@ import api from '@/auth/helpers'
 import auth from '@/auth/index'
 import store from '../room/store'
 import EnterRoom from '../room/room.vue'
+import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'Lounge',
+
+  components: {
+    Paginate
+  },
 
   filters: {
     formateDate: (timestamp) => {
@@ -105,12 +112,21 @@ export default {
       active: null,
       showGuestsPage: false,
       showMessagesPage: false,
+      loading: false,
+      oops: false,
       dialogFullActive: false,
       dialogFullComp: null
     }
   },
 
   computed: {
+    loadingState () {
+      return this.showGuestsPage && this.showMessagesPage
+    }
+  },
+
+  watch: {
+    'loadingState': 'loadingChange'
   },
 
   created () {
@@ -119,6 +135,12 @@ export default {
   },
 
   methods: {
+    loadingChange (newValue, oldValue) {
+      if (newValue) {
+        this.loading = false
+      }
+    },
+
     popularGuests () {
       var form = {}
       const header = ['popular-guests', null]
@@ -178,6 +200,6 @@ export default {
 
 <style lang="stylus" scoped>
 .my-lounge
-  height 100%
+  height: 100%
 
 </style>

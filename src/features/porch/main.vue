@@ -293,13 +293,7 @@ export default {
 
 <style lang="stylus">
 .my-porch
-
-  &__media
-    height: 100%
-    margin: 0
-
-  .picker__title
-    display: none !important
+  height: 100%
 
   &__card
     position: relative

@@ -560,6 +560,8 @@ export default {
 
 <style lang="stylus">
   .my-profile
+    height: 100%
+
     &__oops
       width: 100px
       padding-bottom: 15px
