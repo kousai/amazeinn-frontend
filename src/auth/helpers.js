@@ -9,6 +9,8 @@ const ENTER_URL = constants.API_BASE_URL + '/enter'
 const LEAVE_URL = constants.API_BASE_URL + '/leave'
 const REQUEST_URL = constants.API_BASE_URL + '/info'
 
+const PAGINATE_LIMIT = 6
+
 export default {
 
   checkinConfig (data) {
@@ -211,6 +213,20 @@ export default {
       newColor += str16.charAt(this.randomNum(0, 16))
     }
     return newColor
+  },
+
+  totalPage (arr) {
+    return Math.ceil(arr.length / PAGINATE_LIMIT)
+  },
+
+  pegination (arr, currentPage) {
+    let result = []
+    if (arr.length <= PAGINATE_LIMIT) {
+      result = arr
+    } else {
+      result = arr.slice(PAGINATE_LIMIT * (currentPage - 1), PAGINATE_LIMIT * currentPage)
+    }
+    return result
   },
 
   resolveFunc (res) {

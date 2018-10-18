@@ -1,9 +1,7 @@
 <template lang="pug">
 .my-contacts
-
-  Appbar
   v-tabs.elevation-0(dark v-model="active" color="primary")
-    v-tab(ripple @click='pageInit("follows")') I Followed
+    v-tab(ripple @click="initPage") I Followed
     v-tab-item
       v-layout(v-show="showFollowsPage" row wrap)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
@@ -30,19 +28,14 @@
                       @click="openDialogFull('EnterRoom', follow.id)"
                     ) arrow_forward_ios
                 v-divider
-            v-layout(align-center justify-center)
-              paginate(
+            div.text-xs-center
+              v-pagination(
                 v-model="followPage"
-                :page-count="totalPage(follows)"
-                :no-li-surround="true"
-                :hide-prev-next="true"
-                :click-handler="clickCallback"
-                :container-class="'pagination'"
-                :prev-text="prevText"
-                :next-text="nextText"
+                :length="totalPage(follows)"
+                :total-visible="5"
               )
 
-    v-tab(ripple @click='pageInit("followers")') My Followers
+    v-tab(ripple @click="initPage") My Followers
     v-tab-item
       v-layout(v-show="showFollowersPage" row wrap)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
@@ -69,16 +62,11 @@
                       @click="openDialogFull('EnterRoom', follower.id)"
                     ) arrow_forward_ios
                 v-divider
-            v-layout(align-center justify-center)
-              paginate(
+            div.text-xs-center
+              v-pagination(
                 v-model="followerPage"
-                :page-count="totalPage(followers)"
-                :no-li-surround="true"
-                :hide-prev-next="true"
-                :click-handler="clickCallback"
-                :container-class="'pagination'"
-                :prev-text="prevText"
-                :next-text="nextText"
+                :length="totalPage(followers)"
+                :total-visible="5"
               )
 
   v-dialog(
@@ -97,14 +85,9 @@ import api from '@/auth/helpers'
 import auth from '@/auth/index'
 import store from '../room/store'
 import EnterRoom from '../room/room.vue'
-import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'Contacts',
-
-  components: {
-    Paginate
-  },
 
   filters: {
     formateDate: (timestamp) => {
@@ -120,7 +103,6 @@ export default {
       followerLists: [],
       followPage: 1,
       followerPage: 1,
-      limit: 6,
       active: null,
       showFollowsPage: false,
       showFollowersPage: false,
@@ -134,25 +116,18 @@ export default {
   computed: {
     loadingState () {
       return this.showFollowsPage && this.showFollowersPage
-    },
-
-    prevText () {
-      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Prev</span>'
-    },
-
-    nextText () {
-      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Next</span>'
     }
   },
 
   watch: {
-    'loadingState': 'loadingChange'
+    'loadingState': 'loadingChange',
+    'followPage': 'changeFollowPage',
+    'followerPage': 'changeFollowerPage'
   },
 
   created () {
     this.showFollows()
     this.showFollowers()
-    this.pageInit('follows')
   },
 
   methods: {
@@ -173,7 +148,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.follows = res.data.result
-            this.followLists = this.pegination(this.follows, 1)
+            this.followLists = api.pegination(this.follows, 1)
             this.showFollowsPage = true
           })
           .catch((error) => {
@@ -194,7 +169,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.followers = res.data.result
-            this.followerLists = this.pegination(this.followers, 1)
+            this.followerLists = api.pegination(this.followers, 1)
             this.showFollowersPage = true
           })
           .catch((error) => {
@@ -205,35 +180,20 @@ export default {
     },
 
     totalPage (arr) {
-      return Math.ceil(arr.length / this.limit)
+      return api.totalPage(arr)
     },
 
-    pegination (arr, currentPage) {
-      let result = []
-      if (arr.length <= this.limit) {
-        result = arr
-      } else {
-        result = arr.slice(this.limit * (currentPage - 1), this.limit * currentPage)
-      }
-      return result
+    changeFollowPage (newValue, oldValue) {
+      this.followLists = api.pegination(this.follows, newValue)
     },
 
-    pageInit (str) {
-      const user = store.state.auth
-      user.user.paginate = str
-      store.dispatch('auth/update', user)
+    changeFollowerPage (newValue, oldValue) {
+      this.followerLists = api.pegination(this.followers, newValue)
     },
 
-    clickCallback (PageNum) {
-      const paginateType = store.state.auth.user.paginate
-      switch (paginateType) {
-        case 'follows':
-          this.followLists = this.pegination(this.follows, PageNum)
-          break
-        case 'followers':
-          this.followerLists = this.pegination(this.followers, PageNum)
-          break
-      }
+    initPage () {
+      this.followPage = 1
+      this.followerPage = 1
     },
 
     openDialogFull (comp, id) {
@@ -262,12 +222,5 @@ export default {
 <style lang="stylus" scoped>
 .my-contacts
   height: 100%
-
-.pagination
-  margin: 0em
-  display: inline-block
-  vertical-align: middle
-  font-size: 30px
-  letter-spacing: 8px
 
 </style>

@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-footer.my-appfooter(:class="{ 'my-appfooter--sidebar-open': sidebarVisibility }")
+  v-footer.my-appfooter(:class="{ 'my-appfooter__sidebar-open': sidebarVisibility }")
     .grey--text © 2018 Clauren Capsella
 </template>
 
@@ -19,7 +19,7 @@ export default {
 .my-appfooter
   justify-content: center
 
-  &--sidebar-open
+  &__sidebar-open
     padding-left: 300px
 
 </style>

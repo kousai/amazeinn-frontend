@@ -44,10 +44,6 @@ export default {
       state.snackbar = Object.assign({}, defaults.snackbar, options)
     },
 
-    error (state, options) {
-      state.error = Object.assign({}, defaults.error, options)
-    },
-
     clear (state) {
       state = Object.assign({}, defaults)
     }

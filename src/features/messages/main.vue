@@ -1,10 +1,7 @@
 <template lang="pug">
 .my-messages
-
-  Appbar
-
   v-tabs.elevation-0(dark v-model="active" color="primary")
-    v-tab(ripple @click='pageInit("messages")') My Messages
+    v-tab(ripple @click="initPage") My Messages
     v-tab-item
       v-layout(v-show="showMessagesPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
@@ -27,19 +24,14 @@
                     v-list-tile-title {{message.content}}
                     v-list-tile-sub-title {{ message.send_time | formateDate }}
                 v-divider
-            v-layout(align-center justify-center)
-              paginate(
+            div.text-xs-center
+              v-pagination(
                 v-model="messagePage"
-                :page-count="totalPage(messages)"
-                :no-li-surround="true"
-                :hide-prev-next="true"
-                :click-handler="clickCallback"
-                :container-class="'pagination'"
-                :prev-text="prevText"
-                :next-text="nextText"
+                :length="totalPage(messages)"
+                :total-visible="5"
               )
 
-    v-tab(ripple @click='pageInit("thumbUps")') Thumbs Up
+    v-tab(ripple @click="initPage") Thumbs Up
     v-tab-item
       v-layout(v-show="showThumbUpsPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
@@ -68,18 +60,13 @@
                       @click="openDialogFull('EnterRoom', thumbUp.guest_id)"
                     ) arrow_forward_ios
                 v-divider
-            v-layout(align-center justify-center)
-              paginate(
+            div.text-xs-center
+              v-pagination(
                 v-model="thumbUpPage"
-                :page-count="totalPage(thumbUps)"
-                :no-li-surround="true"
-                :hide-prev-next="true"
-                :click-handler="clickCallback"
-                :container-class="'pagination'"
-                :prev-text="prevText"
-                :next-text="nextText"
+                :length="totalPage(thumbUps)"
+                :total-visible="5"
               )
-    v-tab(ripple @click='pageInit("thumbDowns")') Thumbs Down
+    v-tab(ripple @click="initPage") Thumbs Down
     v-tab-item
       v-layout(v-show="showThumbDownsPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
@@ -108,16 +95,11 @@
                       @click="openDialogFull('EnterRoom', thumbDown.guest_id)"
                     ) arrow_forward_ios
                 v-divider
-            v-layout(align-center justify-center)
-              paginate(
+            div.text-xs-center
+              v-pagination(
                 v-model="thumbDownPage"
-                :page-count="totalPage(thumbDowns)"
-                :no-li-surround="true"
-                :hide-prev-next="true"
-                :click-handler="clickCallback"
-                :container-class="'pagination'"
-                :prev-text="prevText"
-                :next-text="nextText"
+                :length="totalPage(thumbDowns)"
+                :total-visible="5"
               )
 
   v-dialog(
@@ -136,14 +118,9 @@ import api from '@/auth/helpers'
 import auth from '@/auth/index'
 import store from '../room/store'
 import EnterRoom from '../room/room.vue'
-import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'Messages',
-
-  components: {
-    Paginate
-  },
 
   filters: {
     formateDate: (timestamp) => {
@@ -162,7 +139,6 @@ export default {
       messagePage: 1,
       thumbUpPage: 1,
       thumbDownPage: 1,
-      limit: 6,
       active: null,
       showMessagesPage: false,
       showThumbUpsPage: false,
@@ -177,26 +153,20 @@ export default {
   computed: {
     loadingState () {
       return this.showMessagesPage && this.showThumbUprsPage && this.showThumbDownsPage
-    },
-
-    prevText () {
-      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Prev</span>'
-    },
-
-    nextText () {
-      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Next</span>'
     }
   },
 
   watch: {
-    'loadingState': 'loadingChange'
+    'loadingState': 'loadingChange',
+    'messagePage': 'changeMessagePage',
+    'thumbUpPage': 'changeThumbUpPage',
+    'thumbDownPage': 'changeThumbDownPage'
   },
 
   created () {
     this.showMessages()
     this.showThumbUps()
     this.showThumbDowns()
-    this.pageInit('messages')
   },
 
   methods: {
@@ -215,6 +185,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.messages = res.data.result
+            this.messageLists = api.pegination(this.messages, 1)
             this.showMessagesPage = true
           })
           .catch((error) => {
@@ -232,6 +203,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.thumbUps = res.data.result
+            this.thumbUpLists = api.pegination(this.thumbUps, 1)
             this.showThumbUpsPage = true
           })
           .catch((error) => {
@@ -249,6 +221,7 @@ export default {
         api.fullRequest(api.infoConfig(JSON.stringify(form), header))
           .then(res => {
             this.thumbDowns = res.data.result
+            this.thumbDownLists = api.pegination(this.thumbDowns, 1)
             this.showThumbDownsPage = true
           })
           .catch((error) => {
@@ -258,38 +231,24 @@ export default {
     },
 
     totalPage (arr) {
-      return Math.ceil(arr.length / this.limit)
+      return api.totalPage(arr)
     },
 
-    pegination (arr, currentPage) {
-      let result = []
-      if (arr.length <= this.limit) {
-        result = arr
-      } else {
-        result = arr.slice(this.limit * (currentPage - 1), this.limit * currentPage)
-      }
-      return result
+    changeMessagePage (newValue, oldValue) {
+      this.messageLists = api.pegination(this.messages, newValue)
     },
 
-    pageInit (str) {
-      const user = store.state.auth
-      user.user.paginate = str
-      store.dispatch('auth/update', user)
+    changeThumbUpPage (newValue, oldValue) {
+      this.thumbUpLists = api.pegination(this.thumbUps, newValue)
     },
 
-    clickCallback (PageNum) {
-      const paginateType = store.state.auth.user.paginate
-      switch (paginateType) {
-        case 'messages':
-          this.messageLists = this.pegination(this.messages, PageNum)
-          break
-        case 'thumbUps':
-          this.thumbUpLists = this.pegination(this.thumbUps, PageNum)
-          break
-        case 'thumbDowns':
-          this.thumbDownLists = this.pegination(this.thumbDowns, PageNum)
-          break
-      }
+    changeThumbDownPage (newValue, oldValue) {
+      this.thumbDownLists = api.pegination(this.thumbDowns, newValue)
+    },
+
+    initPage () {
+      this.followPage = 1
+      this.followerPage = 1
     },
 
     openDialogFull (comp, id) {
@@ -325,12 +284,5 @@ export default {
 
   &__count
     color: white
-
-.pagination
-  margin: 0em
-  display: inline-block
-  vertical-align: middle
-  font-size: 30px
-  letter-spacing: 8px
 
 </style>

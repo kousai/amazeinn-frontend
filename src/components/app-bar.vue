@@ -7,9 +7,7 @@
     app
     dense
   )
-    v-toolbar-side-icon(v-show="!backButton" @click.stop="toggleSidebar()")
-    v-btn(icon v-show="backButton" @click.stop="$router.back()")
-      v-icon arrow_back
+    v-toolbar-side-icon(@click.stop="toggleSidebar()")
     v-toolbar-title.my_appbar__default-title(v-if="!$slots.title") {{ $store.state.common.title }}
     v-toolbar-title.my-appbar__title(v-if="$slots.title && (!$slots.smallTitle || $vuetify.breakpoint.mdAndUp)")
       slot(name="title")
@@ -20,18 +18,13 @@
       slot(name="icons")
     .my-appbar__small-icons(v-if="$slots.smallIcons && $vuetify.breakpoint.smAndDown")
       slot(name="smallIcons")
+    v-btn(icon @click.stop="$router.back()")
+      v-icon arrow_back
 </template>
 
 <script>
 export default {
   name: 'AppBar',
-
-  props: {
-    backButton: {
-      type: Boolean,
-      default: false
-    }
-  },
 
   methods: {
     toggleSidebar () {

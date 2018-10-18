@@ -1,16 +1,6 @@
 <template lang="pug">
 v-container(fluid fill-height style="padding: 0;")
   v-layout.my-profile(column)
-
-    v-tabs.my-profile__tabs(
-      :color="$vuetify.breakpoint.smAndDown ? 'primary' : ''"
-      :dark="$vuetify.breakpoint.smAndDown"
-      v-model="active"
-      align-with-title
-      :class="{ 'my-profile__mobile-tabs': $vuetify.breakpoint.mdAndUp }"
-      style="position: fixed; width: 100%; z-index: 1; background: #F4F4F4;"
-    )
-
     v-container(
       fluid
       fill-height
@@ -18,7 +8,6 @@ v-container(fluid fill-height style="padding: 0;")
       v-bind:grid-list-lg="$vuetify.breakpoint.mdAndUp"
       style="position: relative; margin-top: 40px;"
     )
-
       v-layout(v-show="showPage" row wrap)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
           v-layout(column)

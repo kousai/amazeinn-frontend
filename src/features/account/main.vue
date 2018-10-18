@@ -1,16 +1,6 @@
 <template lang="pug">
 v-container(fluid fill-height style="padding: 0;")
   v-layout.my-account(column)
-
-    v-tabs.my-account__tabs(
-      :color="$vuetify.breakpoint.smAndDown ? 'primary' : ''"
-      :dark="$vuetify.breakpoint.smAndDown"
-      v-model="currentTab"
-      align-with-title
-      :class="{ 'my-account__mobile-tabs': $vuetify.breakpoint.mdAndUp }"
-      style="position: fixed; width: 100%; z-index: 1; background: #F4F4F4;"
-    )
-
     v-container(
       fluid
       fill-height
@@ -18,7 +8,6 @@ v-container(fluid fill-height style="padding: 0;")
       v-bind:grid-list-lg="$vuetify.breakpoint.mdAndUp"
       style="position: relative; margin-top: 40px;"
     )
-
       v-layout(row wrap)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
           v-layout(column)
@@ -73,7 +62,6 @@ export default {
 
   data () {
     return {
-      currentTab: '/acount',
       dialogFullActive: false,
       dialogFullComp: null
     }
@@ -110,10 +98,4 @@ export default {
       width: 100px
       padding-bottom: 15px
 
-    .tabs__bar
-      background: #F4F4F4
-
-    &__mobile-tabs
-      .tabs__item--active
-        color: $app-primary
 </style>

@@ -8,7 +8,7 @@
     dark
   )
     v-layout(justify-center wrap)
-      .my-sidebar__hero-pattern
+      .my-sidebar__pattern
 
     v-divider
 
@@ -135,18 +135,12 @@ export default {
   .my-sidebar
     z-index: 8
 
-    &__logo
-      padding-right: 10px
-      padding-top: 14px
-      padding-bottom: 14px
-      height: 60px
-
-    &__hero-pattern
+    &__pattern
       height: 145px
       width: 300px
       position: absolute
       background-color: #B39DDB
-      background-image: url("../assets/images/buildings.png")
+      background-image: $app-sidebar-image
       background-repeat: no-repeat
       background-attachment: fixed
       background-position: 95.5% 50%

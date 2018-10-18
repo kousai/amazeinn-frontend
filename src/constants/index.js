@@ -2,12 +2,12 @@
 export const DEBUG = false
 
 // Backend API endpoints
-export const API_BASE_URL = 'https://amazeinn-backend.herokuapp.com/api'
-// export const API_BASE_URL = 'http://localhost:4567/api'
+// export const API_BASE_URL = 'https://amazeinn-backend.herokuapp.com/api'
+export const API_BASE_URL = 'http://localhost:4567/api'
 
 // Github Page Config
-export const ROUTER_BASE_URL = '/amazeinn/'
-// export const ROUTER_BASE_URL = '/'
+// export const ROUTER_BASE_URL = '/amazeinn/'
+export const ROUTER_BASE_URL = '/'
 
 /**
  * Key for local storage.

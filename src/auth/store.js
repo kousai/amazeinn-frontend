@@ -7,8 +7,7 @@ const defaults = {
     name: '',
     id: '',
     gender: '',
-    avatar: '',
-    paginate: ''
+    avatar: ''
   }
 }
 

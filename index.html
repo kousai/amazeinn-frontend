@@ -33,6 +33,10 @@
         if (redirect && redirect != location.href) {
           history.replaceState(null, null, redirect);
         }
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+          history.pushState(null, null, document.URL);
+        });
       })();
     </script>
   </head>

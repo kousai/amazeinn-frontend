@@ -31,7 +31,7 @@ export default {
   data () {
     return {
       dialog: false,
-      password: '111111111',
+      password: '',
       passwordInvalid: false,
       passwordHidden: true
     }
@@ -85,5 +85,7 @@ export default {
 </script>
 
 <style lang="stylus">
+.my-dialog
+  z-index: 99
 
 </style>

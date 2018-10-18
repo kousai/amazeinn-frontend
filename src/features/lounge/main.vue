@@ -1,8 +1,5 @@
 <template lang="pug">
 .my-lounge
-
-  Appbar
-
   v-tabs.elevation-0(dark v-model="active" color="primary")
     v-tab(ripple) Popular Guests
     v-tab-item
@@ -90,14 +87,9 @@ import api from '@/auth/helpers'
 import auth from '@/auth/index'
 import store from '../room/store'
 import EnterRoom from '../room/room.vue'
-import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'Lounge',
-
-  components: {
-    Paginate
-  },
 
   filters: {
     formateDate: (timestamp) => {

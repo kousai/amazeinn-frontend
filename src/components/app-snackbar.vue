@@ -32,5 +32,7 @@ export default {
 </script>
 
 <style lang="stylus">
+.my-snackbar
+  z-index: 100
 
 </style>

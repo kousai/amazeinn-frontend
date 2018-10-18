@@ -24,22 +24,7 @@ v-container.my-support(
 
 <script>
 export default {
-  name: 'Support',
-
-  data () {
-    return {
-
-    }
-  },
-
-  mounted () {
-    // this.$store.dispatch('common/updateToolbar', {
-    //  elevation: false
-    // })
-  },
-
-  methods: {
-  }
+  name: 'Support'
 }
 </script>
 
