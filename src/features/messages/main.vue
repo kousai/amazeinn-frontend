@@ -32,8 +32,11 @@
                 v-model="messagePage"
                 :page-count="totalPage(messages)"
                 :no-li-surround="true"
+                :hide-prev-next="true"
                 :click-handler="clickCallback"
                 :container-class="'pagination'"
+                :prev-text="prevText"
+                :next-text="nextText"
               )
 
     v-tab(ripple @click='pageInit("thumbUps")') Thumbs Up
@@ -70,8 +73,11 @@
                 v-model="thumbUpPage"
                 :page-count="totalPage(thumbUps)"
                 :no-li-surround="true"
+                :hide-prev-next="true"
                 :click-handler="clickCallback"
                 :container-class="'pagination'"
+                :prev-text="prevText"
+                :next-text="nextText"
               )
     v-tab(ripple @click='pageInit("thumbDowns")') Thumbs Down
     v-tab-item
@@ -107,8 +113,11 @@
                 v-model="thumbDownPage"
                 :page-count="totalPage(thumbDowns)"
                 :no-li-surround="true"
+                :hide-prev-next="true"
                 :click-handler="clickCallback"
                 :container-class="'pagination'"
+                :prev-text="prevText"
+                :next-text="nextText"
               )
 
   v-dialog(
@@ -168,6 +177,14 @@ export default {
   computed: {
     loadingState () {
       return this.showMessagesPage && this.showThumbUprsPage && this.showThumbDownsPage
+    },
+
+    prevText () {
+      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Prev</span>'
+    },
+
+    nextText () {
+      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Next</span>'
     }
   },
 
@@ -314,5 +331,6 @@ export default {
   display: inline-block
   vertical-align: middle
   font-size: 30px
+  letter-spacing: 8px
 
 </style>

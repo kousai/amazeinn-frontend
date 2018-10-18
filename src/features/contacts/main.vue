@@ -35,8 +35,11 @@
                 v-model="followPage"
                 :page-count="totalPage(follows)"
                 :no-li-surround="true"
+                :hide-prev-next="true"
                 :click-handler="clickCallback"
                 :container-class="'pagination'"
+                :prev-text="prevText"
+                :next-text="nextText"
               )
 
     v-tab(ripple @click='pageInit("followers")') My Followers
@@ -66,6 +69,17 @@
                       @click="openDialogFull('EnterRoom', follower.id)"
                     ) arrow_forward_ios
                 v-divider
+            v-layout(align-center justify-center)
+              paginate(
+                v-model="followerPage"
+                :page-count="totalPage(followers)"
+                :no-li-surround="true"
+                :hide-prev-next="true"
+                :click-handler="clickCallback"
+                :container-class="'pagination'"
+                :prev-text="prevText"
+                :next-text="nextText"
+              )
 
   v-dialog(
     v-model="dialogFullActive"
@@ -120,6 +134,14 @@ export default {
   computed: {
     loadingState () {
       return this.showFollowsPage && this.showFollowersPage
+    },
+
+    prevText () {
+      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Prev</span>'
+    },
+
+    nextText () {
+      return '<span style="background-color: yellow; letter-spacing: 0px; font-weight: bold; border: 1px solid #3CB371; border-radius: 4px">Next</span>'
     }
   },
 
@@ -246,5 +268,6 @@ export default {
   display: inline-block
   vertical-align: middle
   font-size: 30px
+  letter-spacing: 8px
 
 </style>

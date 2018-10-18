@@ -29,16 +29,17 @@ v-container(fluid fill-height style="padding: 0;")
                 v-card-text
                   v-layout(row wrap style="align-items: center;")
                     v-flex(d-flex xs12 sm12 md6)
-                      | Name
-                    v-flex(dflex xs12 sm12 md6)
-                      v-layout(style="align-items: center;")
-                        v-flex.text-xs-left(md6) {{ $store.state.auth.user.name }}
-                        v-flex.text-xs-right(md6)
+                      span Name:
                     v-flex(d-flex xs12 sm12 md6)
-                      | Password
-                    v-flex(dflex xs12 sm12 md6)
                       v-layout(style="align-items: center;")
-                        v-flex.text-xs-left(md6) *********
+                        v-flex.my-account__name.text-xs-left(md6) {{ $store.state.auth.user.name }}
+                        v-flex.text-xs-right(md6)
+                          v-card(flat)
+                    v-flex(d-flex xs12 sm12 md6)
+                      span Password:
+                    v-flex(d-flex xs12 sm12 md6)
+                      v-layout(style="align-items: center;")
+                        v-flex.my-account__password.text-xs-left(md6) *********
                         v-flex.text-xs-right(md6)
                           v-btn(flat icon color="primary" @click="openDialogFull('PasswordEdit')")
                             v-icon edit
@@ -91,10 +92,19 @@ export default {
 
 <style lang="stylus">
   .my-account
-    height: 100%
 
     &__avatar-link
       padding-left: 10px
+
+    &__name
+      color: green
+      font-size: 20px
+      font-weight: bold
+      text-indent: 20px
+      margin-bottom: 20px
+
+    &__password
+      text-indent: 20px
 
     &__oops
       width: 100px

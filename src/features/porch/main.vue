@@ -261,6 +261,8 @@ export default {
         fontWeight: 'bold',
         fontSize: '15px',
         textAlign: 'center',
+        marginTop: '10px',
+        marginBottom: '10px',
         background: flag ? 'white' : api.randomColor()
       }
       return style
