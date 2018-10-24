@@ -18,8 +18,6 @@
       slot(name="icons")
     .my-appbar__small-icons(v-if="$slots.smallIcons && $vuetify.breakpoint.smAndDown")
       slot(name="smallIcons")
-    v-btn(icon @click.stop="$router.back()")
-      v-icon arrow_back
 </template>
 
 <script>

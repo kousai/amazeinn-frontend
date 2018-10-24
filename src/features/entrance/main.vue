@@ -10,6 +10,9 @@
     )
       v-btn(icon)
         img.my-entrance__logo(src='~/@/assets/images/logo.png' alt='VueAMazeInn Logo')
+      v-spacer
+      v-btn(flat @click="openResume()")
+        span About Me
 
     v-layout(justify-center align-center)
       v-flex.text-xs-center(xs12 lg6)
@@ -128,6 +131,10 @@ export default {
         fontSize: '15px'
       }
       return style
+    },
+
+    openResume () {
+      window.open('https://kousai.github.io/resume')
     },
 
     guestCheckin () {
