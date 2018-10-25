@@ -183,9 +183,9 @@ export default {
 
   likeCount (liked) {
     if (liked > 0) {
-      return '+' + liked
+      return `+${liked}`
     } else if (liked < 0) {
-      return '-' + liked
+      return `-${liked}`
     } else {
       return liked
     }
@@ -200,6 +200,23 @@ export default {
     var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
     var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
     return Y + M + D + h + m + s
+  },
+
+  limitFileSize (file, limitSize) {
+    const arr = ['KB', 'MB', 'GB']
+    const limit = limitSize.toUpperCase()
+    let limitNum = 0
+    for (var i = 0; i < arr.length; i++) {
+      var level = limit.indexOf(arr[i])
+      if (level > -1) {
+        limitNum = Number(limit.substr(0, level)) * Math.pow(1024, (i + 1))
+        break
+      }
+    }
+    if (file.size > limitNum) {
+      return false
+    }
+    return true
   },
 
   randomNum (lower, upper) {
@@ -231,7 +248,8 @@ export default {
 
   resolveFunc (res) {
     let errorMessage = null
-    if (!res.data.hasOwnProperty('failed')) {
+    const has = Object.prototype.hasOwnProperty
+    if (!has.call(res.data, 'failed')) {
     } else if (res.data.failed === 1) {
       errorMessage = 'no empty room'
     } else if (res.data.failed === 2) {

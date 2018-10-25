@@ -5,7 +5,7 @@
     v-tab-item
       v-layout(v-show="showGuestsPage" row)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
-          v-card(v-if="guests.length == 0")
+          v-card(v-if="guests.length === 0")
             v-list(subheader)
               v-subheader No Guests
           v-card(v-else)
@@ -40,7 +40,7 @@
     v-tab-item
       v-layout(v-show="showMessagesPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
-          v-card(v-if="messages.length == 0")
+          v-card(v-if="messages.length === 0")
             v-list(subheader)
               v-subheader No Messages
           v-card(v-else)

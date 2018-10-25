@@ -5,12 +5,12 @@
     v-tab-item
       v-layout(v-show="showFollowsPage" row wrap)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
-          v-card(v-if="followLists.length == 0")
+          v-card(v-if="followLists.length === 0")
             v-list(subheader)
               v-subheader No Follows
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Follows List
+              v-subheader You have {{follows.length}} Follows
               template(
                 v-for="follow in followLists"
               )
@@ -28,7 +28,7 @@
                       @click="openDialogFull('EnterRoom', follow.id)"
                     ) arrow_forward_ios
                 v-divider
-            div.text-xs-center
+            div.text-xs-center(v-if='totalPage(follows)!==1')
               v-pagination(
                 v-model="followPage"
                 :length="totalPage(follows)"
@@ -39,12 +39,12 @@
     v-tab-item
       v-layout(v-show="showFollowersPage" row wrap)
         v-flex(d-flex xs12 sm12 md4 offset-md4)
-          v-card(v-if="followers.length == 0")
+          v-card(v-if="followers.length === 0")
             v-list(subheader)
               v-subheader No Followers
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Followers List
+              v-subheader You have {{followers.length}} Followers
               template(
                 v-for="follower in followers"
               )
@@ -62,7 +62,7 @@
                       @click="openDialogFull('EnterRoom', follower.id)"
                     ) arrow_forward_ios
                 v-divider
-            div.text-xs-center
+            div.text-xs-center(v-if='totalPage(followers)!==1')
               v-pagination(
                 v-model="followerPage"
                 :length="totalPage(followers)"

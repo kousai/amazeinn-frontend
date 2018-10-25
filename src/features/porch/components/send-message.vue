@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-card
+  v-card.my-send-message__ants
     v-card-title
       span(class="headline") Write a Message
     v-card-text
@@ -113,7 +113,19 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@keyframes ants {
+  to {
+    background-position: 100% 100%
+  }
+}
 .my-send-message
   height: 100%
+
+  &__ants
+    padding: 1em
+    border: .8em solid transparent
+    background: linear-gradient(white, white) padding-box,
+                repeating-linear-gradient(-45deg, red 0, red 12.5%, white 0, white 25%, #58a 0, #58a 37.5%, white 0, white 50%) 0 / 6em 6em
+    animation: ants 6s linear infinite
 
 </style>

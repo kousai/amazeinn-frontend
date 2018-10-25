@@ -22,7 +22,7 @@
               img(src='~/@/assets/images/logo-name.svg' alt='AMazeInn')
           v-flex(xs12)
             .my-entrance__subheading.subheading
-              span(:style='logoStyle()') Welcome to AMazeInn!
+              div.my-entrance__welcome Welcome to AMazeInn!
           v-flex(xs12)
             v-card.my-entrance__card
               v-card-title.my-entrance__card-title(primary-title)
@@ -124,15 +124,6 @@ export default {
       return redirect
     },
 
-    logoStyle () {
-      let style = {
-        color: 'green',
-        fontWeight: 'bold',
-        fontSize: '15px'
-      }
-      return style
-    },
-
     openResume () {
       window.open('https://kousai.github.io/resume')
     },
@@ -148,7 +139,7 @@ export default {
           .then(res => {
             this.checkinLoading = false
             this.isEnterAction = true
-            api.showMessage('Checkin OK, ' + this.credentials.username + '. Please enter your Room.')
+            api.showMessage(`Checkin OK, ${this.credentials.username}. Please enter your Room.`)
           })
           .catch((error) => {
             this.checkinLoading = false && error
@@ -175,7 +166,7 @@ export default {
               auth.redirectPath('home')
             }
             this.$store.dispatch('common/updateSidebar', { visible: true })
-            api.showMessage('Welcome, ' + this.$store.state.auth.user.name)
+            api.showMessage(`Welcome, ${this.$store.state.auth.user.name}`)
           })
           .catch((error) => {
             this.enterLoading = false && error
@@ -189,6 +180,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  @keyframes typing {
+    from {
+      width: 0
+    }
+  }
+
+   @keyframes caret {
+    50% {
+      border-right-color: transparent
+    }
+  }
+
   .my-entrance
     background-image: $app-enter-image
     background-size: 100% 100%
@@ -205,13 +208,26 @@ export default {
         width: 100%
         margin-top: 30px
 
+    &__welcome
+      color: green
+      font: bold 15px Consolas, Monaco, monospace
+      margin: auto
+      width: 20ch
+      white-space: nowrap
+      overflow: hidden
+      border-right: .05em solid
+      animation: typing 8s steps(20),
+                 caret 1s steps(1) infinite
+
     &__subheading
       color: white
       padding-top: 10px
       padding-bottom: 20px
 
     &__card
-      background-color: rgba(255,255,255,0.8)
+      // border: 10px solid hsla(0,0%,100%,.5)
+      background: rgba(255,255,255,0.8)
+      // background-clip: padding-box
       max-width: 370px
       margin: 0 auto
 

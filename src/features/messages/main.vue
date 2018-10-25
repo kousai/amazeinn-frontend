@@ -5,12 +5,12 @@
     v-tab-item
       v-layout(v-show="showMessagesPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
-          v-card(v-if="messages.length == 0")
+          v-card(v-if="messages.length === 0")
             v-list(subheader)
               v-subheader No Messages
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Messages List
+              v-subheader You have {{messages.length}} Messages
               template(
                 v-for="message in messages"
               )
@@ -24,7 +24,7 @@
                     v-list-tile-title {{message.content}}
                     v-list-tile-sub-title {{ message.send_time | formateDate }}
                 v-divider
-            div.text-xs-center
+            div.text-xs-center(v-if='totalPage(messages)!==1')
               v-pagination(
                 v-model="messagePage"
                 :length="totalPage(messages)"
@@ -35,12 +35,12 @@
     v-tab-item
       v-layout(v-show="showThumbUpsPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
-          v-card(v-if="thumbUps.length == 0")
+          v-card(v-if="thumbUps.length === 0")
             v-list(subheader)
               v-subheader No Thumb-Ups
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Thumb-Ups List
+              v-subheader You have {{thumbUps.length}} Thumb-Ups
               template(
                 v-for="thumbUp in thumbUps"
               )
@@ -60,7 +60,7 @@
                       @click="openDialogFull('EnterRoom', thumbUp.guest_id)"
                     ) arrow_forward_ios
                 v-divider
-            div.text-xs-center
+            div.text-xs-center(v-if='totalPage(thumbUps)!==1')
               v-pagination(
                 v-model="thumbUpPage"
                 :length="totalPage(thumbUps)"
@@ -70,12 +70,12 @@
     v-tab-item
       v-layout(v-show="showThumbDownsPage" row)
         v-flex(d-flex xs12 sm12 md6 offset-md3)
-          v-card(v-if="thumbDowns.length == 0")
+          v-card(v-if="thumbDowns.length === 0")
             v-list(subheader)
               v-subheader No Thumb-Downs
           v-card(v-else)
             v-list(subheader three-line)
-              v-subheader Thumb-Downs List
+              v-subheader You have {{thumbDowns.length}} Thumb-Downs
               template(
                 v-for="thumbDown in thumbDowns"
               )
@@ -95,7 +95,7 @@
                       @click="openDialogFull('EnterRoom', thumbDown.guest_id)"
                     ) arrow_forward_ios
                 v-divider
-            div.text-xs-center
+            div.text-xs-center(v-if='totalPage(thumbDowns)!==1')
               v-pagination(
                 v-model="thumbDownPage"
                 :length="totalPage(thumbDowns)"

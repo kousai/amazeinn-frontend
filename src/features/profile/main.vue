@@ -17,7 +17,7 @@ v-container(fluid fill-height style="padding: 0;")
                   v-layout
                     v-flex
                       v-avatar(size='158')
-                        img(:src='avatarLink')
+                        img.my-profile__img(:src='avatarLink')
                       br
                       v-btn(
                         outline
@@ -484,7 +484,7 @@ export default {
 
     changeProfile (flag, content) {
       this.isEditSuccess = false
-      var str = '{"' + flag + '":"' + content + '"}'
+      var str = `{"${flag}":"${content}"}`
       var data = {
         instruction: str
       }
@@ -494,7 +494,7 @@ export default {
       } else {
         api.fullRequest(api.infoConfig(JSON.stringify(data), header))
           .then(res => {
-            api.showMessage('Change ' + flag + ' OK')
+            api.showMessage(`Change ${flag} OK`)
             this.isEditSuccess = true
             switch (flag) {
               case 'nickname':
@@ -564,6 +564,15 @@ export default {
 
     &__name
       color: green
+
+    &__img
+      max-width: 158px
+      -webkit-clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%)
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%)
+      transition: 1s
+      &:hover
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
 
     &__intro
       word-wrap: break-word

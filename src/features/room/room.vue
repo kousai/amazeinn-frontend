@@ -338,7 +338,7 @@ export default {
       } else {
         api.fullRequest(api.infoConfig(JSON.stringify(data), header))
           .then(res => {
-            api.showMessage(flag + ' Successful.')
+            api.showMessage(`${flag} Successful.`)
             this.data.follows_label = !this.data.follows_label
           })
           .catch((error) => {

@@ -142,6 +142,22 @@ export default {
           break
       }
       return res
+    },
+
+    limitSize () {
+      var res = ''
+      switch (this.label) {
+        case 'avatar':
+          res = '100KB'
+          break
+        case 'bg_image':
+          res = '300KB'
+          break
+        case 'bg_music':
+          res = '5MB'
+          break
+      }
+      return res
     }
   },
 
@@ -228,7 +244,7 @@ export default {
       } else {
         api.fullRequest(api.infoConfig(JSON.stringify(data), header))
           .then(res => {
-            api.showMessage('Change ' + this.uploadLabel[0] + ' OK')
+            api.showMessage(`Change ${this.uploadLabel[0]} OK`)
             this.isSuccess = true
           })
           .catch((error) => {
@@ -253,10 +269,14 @@ export default {
       let inputDOM = this.$refs.uploadLocal
       let files = inputDOM.files
       if (files.length === 0) {
-        api.showMessage('Please choose a image file.')
+        api.showMessage(`Please choose a ${this.uploadLabel[0]}.`)
         return
       }
       let file = files[0]
+      if (!api.limitFileSize(file, this.limitSize)) {
+        api.showMessage(`Your ${this.uploadLabel[0]}'s size can't be over ${this.limitSize}.`)
+        return
+      }
       var data = new FormData()
       data.append('file', file)
       const header = ['upload-file', this.label]
@@ -267,7 +287,7 @@ export default {
         api.fullRequest(api.infoConfig(data, header))
           .then(res => {
             this.uploadLoading = false
-            api.showMessage('Upload ' + this.uploadLabel[0] + ' OK')
+            api.showMessage(`Upload ${this.uploadLabel[0]} OK`)
             this.isSuccess = true
           })
           .catch((error) => {
