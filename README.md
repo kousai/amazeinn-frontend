@@ -1,6 +1,7 @@
-# vue-amazeinn
+# amazeinn-frontend
 
-> A Vue.js project
+> a Single-Page App
+> Vue.js + webpack + PWA + VueRouter + Vuex + Axios + Stylus + Pug + Vuetify
 
 ## Build Setup
 
