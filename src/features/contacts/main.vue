@@ -140,7 +140,7 @@ export default {
     showFollows () {
       this.loading = true
       this.oops = false
-      var form = {}
+      const form = {}
       const header = ['show-follows', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
@@ -161,7 +161,7 @@ export default {
     showFollowers () {
       this.loading = true
       this.oops = false
-      var form = {}
+      const form = {}
       const header = ['show-followers', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()

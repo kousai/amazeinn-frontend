@@ -134,7 +134,7 @@ export default {
     },
 
     popularGuests () {
-      var form = {}
+      const form = {}
       const header = ['popular-guests', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
@@ -151,7 +151,7 @@ export default {
     },
 
     popularMessages () {
-      var form = {}
+      const form = {}
       const header = ['popular-messages', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()

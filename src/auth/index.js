@@ -44,8 +44,8 @@ export default {
 
   isValidLogin () {
     if (store.state.auth.isLoggedIn) {
-      var d = new Date()
-      var n = d.getTime()
+      const d = new Date()
+      const n = d.getTime()
       return n - store.state.auth.loginTime < 604800000
     } else {
       return false
@@ -84,7 +84,7 @@ export default {
         const auth = store.state.auth
         auth.accessToken = response.data.result.access_token
         store.dispatch('auth/update', auth)
-        var newRequest = request
+        let newRequest = request
         newRequest.headers['ACCESS_TOKEN'] = store.state.auth.accessToken
         return this.retry(newRequest)
       })
@@ -104,8 +104,8 @@ export default {
 
   storeToken (response) {
     const auth = store.state.auth
-    var d = new Date()
-    var n = d.getTime()
+    const d = new Date()
+    const n = d.getTime()
     auth.isLoggedIn = true
     auth.accessToken = response.data.result.access_token
     auth.refreshToken = response.data.result.refresh_token

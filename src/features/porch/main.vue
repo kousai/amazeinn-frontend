@@ -148,7 +148,7 @@ export default {
   computed: {
     styles () {
       let styles = []
-      for (var i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         styles[i] = this.randStyle(this.data.members[i].isempty)
       }
       styles[6] = this.randStyle(false)
@@ -173,7 +173,7 @@ export default {
 
     doors () {
       let doors = []
-      for (var i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         doors[i] = api.doorPic(this.data.members[i].isempty)
       }
       return doors
@@ -191,7 +191,7 @@ export default {
   methods: {
 
     enterIndex () {
-      var form = {}
+      const form = {}
       const header = ['enter-index', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
@@ -211,7 +211,7 @@ export default {
     },
 
     useLift () {
-      var form = {}
+      const form = {}
       const header = ['use-lift', null]
       this.liftLoading = true
       if (!auth.isValidLogin()) {
@@ -231,7 +231,7 @@ export default {
     },
 
     toFloor1 () {
-      var form = {}
+      const form = {}
       const header = ['to-floor1', null]
       this.firstLoading = true
       if (!auth.isValidLogin()) {
@@ -253,11 +253,11 @@ export default {
     randRoom () {
       let rooms = [0, 1, 2, 3, 4, 5, 6, 7,
         8, 11, 12, 15, 16, 17, 18, 19]
-      for (var a = 0; a < 16; a++) {
-        this.roomLabel[rooms[a]] = null
+      for (let i = 0; i < 16; i++) {
+        this.roomLabel[rooms[i]] = null
       }
-      for (var i = 0; i < 6; i++) {
-        var rand = api.randomNum(0, 16 - i)
+      for (let i = 0; i < 6; i++) {
+        const rand = api.randomNum(0, 16 - i)
         this.roomLabel[rooms[rand]] = `room-${i}`
         rooms.splice(rand, 1)
       }

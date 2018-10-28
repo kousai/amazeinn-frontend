@@ -266,11 +266,11 @@ export default {
     enterRoom () {
       this.loading = true
       this.oops = false
-      var form = {
+      const form = {
         id: store.state.room.id
       }
-      var data = {}
-      var header = []
+      let data = {}
+      let header
       if (store.state.room.id === store.state.auth.user.id) {
         header = ['enter-room', null]
         this.label = true
@@ -299,7 +299,7 @@ export default {
     },
 
     exit () {
-      var audio = this.$refs.roomAudio
+      const audio = this.$refs.roomAudio
       audio.pause()
       audio.currentTime = 0
       this.isActive = false
@@ -318,14 +318,13 @@ export default {
     },
 
     followGuest () {
-      var form = {
+      const form = {
         id: store.state.room.id
       }
-      var data = {
+      const data = {
         instruction: JSON.stringify(form)
       }
-      var header = []
-      var flag = ''
+      let header, flag
       if (this.data.follows_label) {
         header = ['unfollow-guest', null]
         flag = 'Unfollow'
@@ -348,10 +347,10 @@ export default {
     },
 
     thumbUp () {
-      var form = {
+      const form = {
         message_id: this.data.message.message_id
       }
-      var data = {
+      const data = {
         instruction: JSON.stringify(form)
       }
       const header = ['like-message', null]
@@ -375,10 +374,10 @@ export default {
     },
 
     thumbDown () {
-      var form = {
+      const form = {
         message_id: this.data.message.message_id
       }
-      var data = {
+      const data = {
         instruction: JSON.stringify(form)
       }
       const header = ['dislike-message', null]

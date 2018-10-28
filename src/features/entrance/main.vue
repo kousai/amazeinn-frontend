@@ -93,7 +93,7 @@ export default {
   methods: {
 
     nameCheck (val, oldVal) {
-      var label = api.checkName(val)
+      const label = api.checkName(val)
       if (label) {
         this.nameInvalid = true
         return label
@@ -104,7 +104,7 @@ export default {
     },
 
     passwordCheck (val, oldVal) {
-      var label = api.checkPassword(val)
+      const label = api.checkPassword(val)
       if (label) {
         this.passwordInvalid = true
         return label
@@ -115,9 +115,9 @@ export default {
     },
 
     oldPath () {
-      var url = new URL(document.location.href)
-      var params = new URLSearchParams(url.search)
-      var redirect = params.get('redirect')
+      const url = new URL(document.location.href)
+      const params = new URLSearchParams(url.search)
+      let redirect = params.get('redirect')
       if (redirect) {
         redirect = redirect.slice(1)
       }
@@ -156,7 +156,7 @@ export default {
       }
       if (!this.nameInvalid && !this.passwordInvalid) {
         this.enterLoading = true
-        var redirect = this.oldPath()
+        const redirect = this.oldPath()
         api.publicRequest(api.enterConfig(JSON.stringify(credentials)))
           .then(res => {
             auth.storeToken(res)

@@ -484,11 +484,11 @@ export default {
 
     changeProfile (flag, content) {
       this.isEditSuccess = false
-      var str = `{"${flag}":"${content}"}`
-      var data = {
+      const str = `{"${flag}":"${content}"}`
+      const data = {
         instruction: str
       }
-      var header = ['edit-profile', null]
+      const header = ['edit-profile', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
       } else {

@@ -177,7 +177,7 @@ export default {
     },
 
     showMessages () {
-      var form = {}
+      const form = {}
       const header = ['show-messages', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
@@ -195,7 +195,7 @@ export default {
     },
 
     showThumbUps () {
-      var form = {}
+      const form = {}
       const header = ['show-thumbups', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
@@ -213,7 +213,7 @@ export default {
     },
 
     showThumbDowns () {
-      var form = {}
+      const form = {}
       const header = ['show-thumbdowns', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()

@@ -113,7 +113,7 @@ export default {
     },
 
     uploadLabel () {
-      var res = []
+      let res
       switch (this.label) {
         case 'avatar':
           res = ['Avatar', 'avatar', 'image file']
@@ -129,7 +129,7 @@ export default {
     },
 
     acceptType () {
-      var res = ''
+      let res
       switch (this.label) {
         case 'avatar':
           res = 'image/gif, image/jpeg, image/png'
@@ -145,7 +145,7 @@ export default {
     },
 
     limitSize () {
-      var res = ''
+      let res
       switch (this.label) {
         case 'avatar':
           res = '100KB'
@@ -185,7 +185,7 @@ export default {
     },
 
     imageCheck () {
-      var patt = /^(http[s]?:\/\/|ftp:\/\/|).*?\/.*?\.(jpg|png|gif)$/i
+      const patt = /^(http[s]?:\/\/|ftp:\/\/|).*?\/.*?\.(jpg|png|gif)$/i
       if (patt.test(this.urlLink)) {
         return true
       } else {
@@ -194,7 +194,7 @@ export default {
     },
 
     musicCheck () {
-      var patt = /^(http[s]?:\/\/|ftp:\/\/|).*?\/.*?\.(mp3|ogg)$/i
+      const patt = /^(http[s]?:\/\/|ftp:\/\/|).*?\/.*?\.(mp3|ogg)$/i
       if (patt.test(this.urlLink)) {
         return true
       } else {
@@ -233,12 +233,12 @@ export default {
 
     changeUrl () {
       this.isSuccess = false
-      var url = this.$refs.urlNet.value
-      var str = '{"' + this.label + '":"' + url + '"}'
-      var data = {
+      const url = this.$refs.urlNet.value
+      const str = `{"${this.label}":"${url}"}`
+      const data = {
         instruction: str
       }
-      var header = ['edit-profile', null]
+      const header = ['edit-profile', null]
       if (!auth.isValidLogin()) {
         auth.expiredLogin()
       } else {
@@ -255,8 +255,8 @@ export default {
 
     selectFile () {
       this.isSuccess = false
-      let inputDOM = this.$refs.uploadLocal
-      let files = inputDOM.files
+      const inputDOM = this.$refs.uploadLocal
+      const files = inputDOM.files
       if (files.length === 0) {
         this.selectHint = 'SELECT FILE'
       } else {
@@ -266,18 +266,18 @@ export default {
 
     uploadFile () {
       this.isSuccess = false
-      let inputDOM = this.$refs.uploadLocal
-      let files = inputDOM.files
+      const inputDOM = this.$refs.uploadLocal
+      const files = inputDOM.files
       if (files.length === 0) {
         api.showMessage(`Please choose a ${this.uploadLabel[0]}.`)
         return
       }
-      let file = files[0]
+      const file = files[0]
       if (!api.limitFileSize(file, this.limitSize)) {
         api.showMessage(`Your ${this.uploadLabel[0]}'s size can't be over ${this.limitSize}.`)
         return
       }
-      var data = new FormData()
+      let data = new FormData()
       data.append('file', file)
       const header = ['upload-file', this.label]
       if (!auth.isValidLogin()) {

@@ -78,10 +78,10 @@ export default {
 
   methods: {
     sendMessage () {
-      var form = {
+      const form = {
         message: this.newMessage
       }
-      var data = {
+      const data = {
         instruction: JSON.stringify(form)
       }
       const header = ['send-message', null]

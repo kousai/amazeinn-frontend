@@ -55,7 +55,7 @@ export default {
     },
 
     passwordCheck (val, oldVal) {
-      var label = api.checkPassword(val)
+      const label = api.checkPassword(val)
       if (label) {
         this.passwordInvalid = true
         return label

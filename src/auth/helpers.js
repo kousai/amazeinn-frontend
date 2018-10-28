@@ -83,7 +83,7 @@ export default {
       this.newRequest(config)
         .then(
           res => {
-            var data = this.showSuccess(res)
+            const data = this.showSuccess(res)
             if (data) {
               resolve(data)
             } else {
@@ -102,7 +102,7 @@ export default {
       this.newRequest(config)
         .then(
           res => {
-            var data = this.showSuccess(res)
+            const data = this.showSuccess(res)
             if (data) {
               resolve(data)
             } else {
@@ -113,7 +113,7 @@ export default {
             if (this.showError(error)) {
               auth.refreshToken(config)
                 .then(res => {
-                  var data = this.showSuccess(res)
+                  const data = this.showSuccess(res)
                   if (data) {
                     resolve(data)
                   } else {
@@ -192,13 +192,13 @@ export default {
   },
 
   formateDate (timestamp) {
-    var date = new Date(timestamp * 1000)
-    var Y = date.getFullYear() + '-'
-    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-    var D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
-    var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
-    var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-    var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+    const date = new Date(timestamp * 1000)
+    const Y = date.getFullYear() + '-'
+    const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+    const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+    const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+    const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+    const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
     return Y + M + D + h + m + s
   },
 
@@ -206,8 +206,8 @@ export default {
     const arr = ['KB', 'MB', 'GB']
     const limit = limitSize.toUpperCase()
     let limitNum = 0
-    for (var i = 0; i < arr.length; i++) {
-      var level = limit.indexOf(arr[i])
+    for (let i = 0; i < arr.length; i++) {
+      const level = limit.indexOf(arr[i])
       if (level > -1) {
         limitNum = Number(limit.substr(0, level)) * Math.pow(1024, (i + 1))
         break
@@ -224,10 +224,10 @@ export default {
   },
 
   randomColor () {
-    let str16 = '0123456789ABCDEF'
+    const str16 = '0123456789ABCDEF'
     let newColor = '#'
     for (var i = 0; i < 6; i++) {
-      newColor += str16.charAt(this.randomNum(0, 16))
+      newColor += str16[this.randomNum(0, 16)]
     }
     return newColor
   },
@@ -237,7 +237,7 @@ export default {
   },
 
   pegination (arr, currentPage) {
-    let result = []
+    let result
     if (arr.length <= PAGINATE_LIMIT) {
       result = arr
     } else {
@@ -275,7 +275,7 @@ export default {
   },
 
   showSuccess (res) {
-    var message = this.resolveFunc(res)
+    const message = this.resolveFunc(res)
     if (typeof (message) === 'string') {
       this.showMessage(message)
     } else {
@@ -284,7 +284,7 @@ export default {
   },
 
   showError (error) {
-    var message = this.rejectFunc(error)
+    const message = this.rejectFunc(error)
     if (message === 401) {
       return true
     } else {

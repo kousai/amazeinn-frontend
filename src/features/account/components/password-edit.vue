@@ -92,7 +92,7 @@ export default {
   methods: {
 
     oldPasswordCheck (val, oldVal) {
-      var label = api.checkPassword(val)
+      const label = api.checkPassword(val)
       if (label) {
         this.oldPasswordInvalid = true
         return label
@@ -103,7 +103,7 @@ export default {
     },
 
     newPasswordCheck (val, oldVal) {
-      var label = api.checkPassword(val)
+      const label = api.checkPassword(val)
       if (label) {
         this.newPasswordInvalid = true
         return label
@@ -114,7 +114,7 @@ export default {
     },
 
     newRepeatCheck (val, oldVal) {
-      var label = api.checkPassword(val) || api.checkMatch(this.newPassword, val)
+      const label = api.checkPassword(val) || api.checkMatch(this.newPassword, val)
       if (label) {
         this.newRepeatInvalid = true
         return label
@@ -127,12 +127,12 @@ export default {
     editPassword () {
       this.loading = true
       this.oops = false
-      var form = {
+      const form = {
         oldPassword: this.oldPassword,
         newPassword: this.newPassword,
         newRepeat: this.newRepeat
       }
-      var data = {
+      const data = {
         instruction: JSON.stringify(form)
       }
       const header = ['edit-password', null]
