@@ -27,17 +27,7 @@
           if (file.match(/\.(js|css)$/)) { %>
     <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>"><% }}} %>
     <script>
-      (function(){
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect != location.href) {
-          history.replaceState(null, null, redirect);
-        }
-        history.pushState(null, null, document.URL);
-        window.addEventListener('popstate', function () {
-          history.pushState(null, null, document.URL);
-        });
-      })();
+      (function(){var redirect = sessionStorage.redirect;delete sessionStorage.redirect;if (redirect && redirect != location.href) {history.replaceState(null, null, redirect);}history.pushState(null, null, document.URL);window.addEventListener('popstate', function () {history.pushState(null, null, document.URL);});})();
     </script>
   </head>
   <body>
