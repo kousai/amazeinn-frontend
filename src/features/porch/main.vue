@@ -135,7 +135,7 @@ export default {
         null, null, null, null],
       showPage: false,
       floorColor: '',
-      rand: 3,
+      rand: api.randomNum(0, 23),
       messageDialogActive: false,
       messageDialogComp: null,
       dialogFullActive: false,

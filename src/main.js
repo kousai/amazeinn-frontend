@@ -3,13 +3,16 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import { http, router } from './http'
 import auth from './auth'
-import '../static/mdi.css'
 import Vuetify from 'vuetify'
 import URLSearchParams from 'url-search-params'
 import App from './app'
 import Loading from './components/loading'
 import Appbar from './components/app-bar'
 import Appfooter from './components/app-footer'
+// Styles
+import './styles/mdi.css'
+import './styles/scss/main.scss'
+import './styles/stylus/main.styl'
 
 Vue.config.productionTip = false
 
@@ -35,10 +38,6 @@ Vue.use(Vuetify, {
     success: '#4CAF50'
   }
 })
-
-// Styles
-require('./styles/scss/main.scss')
-require('./styles/stylus/main.styl')
 
 // Global Components
 Vue.component('loading', Loading)
