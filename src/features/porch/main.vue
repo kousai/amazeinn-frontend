@@ -135,7 +135,7 @@ export default {
         null, null, null, null],
       showPage: false,
       floorColor: '',
-      rand: api.randomNum(0, 23),
+      rand: 0,
       messageDialogActive: false,
       messageDialogComp: null,
       dialogFullActive: false,
@@ -201,7 +201,7 @@ export default {
             this.data = res.data.result
             this.floorColor = api.randomColor()
             this.randRoom()
-            this.rand = api.randomNum(0, 23)
+            this.rand = api.randomNum(1, 24)
             this.showPage = true
           })
           .catch((error) => {
@@ -222,7 +222,7 @@ export default {
             this.data = res.data.result
             this.liftLoading = false
             this.randRoom()
-            this.rand = api.randomNum(0, 23)
+            this.rand = api.randomNum(1, 24)
           })
           .catch((error) => {
             this.liftLoading = false && error
@@ -242,7 +242,7 @@ export default {
             this.data = res.data.result
             this.firstLoading = false
             this.randRoom()
-            this.rand = api.randomNum(0, 23)
+            this.rand = api.randomNum(1, 24)
           })
           .catch((error) => {
             this.firstLoading = false && error
@@ -299,31 +299,6 @@ export default {
 <style lang="stylus">
 .my-porch-0
   height: 100%
-  background: #78552B
-  background-image:
-    linear-gradient(
-      white 2px,
-      transparent 0
-    ),
-    linear-gradient(
-      90deg,
-      white 2px,
-      transparent 0
-    ),
-    linear-gradient(
-      hsla(0,0%,100%,.3) 1px,
-      transparent 0
-    ),
-    linear-gradient(
-      90deg,
-      hsla(0,0%,100%,.3) 1px,
-      transparent 0
-    )
-  background-size:
-    50px 50px,
-    50px 50px,
-    10px 10px,
-    10px 10px
 
 .my-porch-1
   height: 100%
@@ -1378,6 +1353,34 @@ export default {
     wheat
   background-size: 10em 10em
   background-blend-mode: multiply
+
+.my-porch-23
+  height: 100%
+  background: #78552B
+  background-image:
+    linear-gradient(
+      white 2px,
+      transparent 0
+    ),
+    linear-gradient(
+      90deg,
+      white 2px,
+      transparent 0
+    ),
+    linear-gradient(
+      hsla(0,0%,100%,.3) 1px,
+      transparent 0
+    ),
+    linear-gradient(
+      90deg,
+      hsla(0,0%,100%,.3) 1px,
+      transparent 0
+    )
+  background-size:
+    50px 50px,
+    50px 50px,
+    10px 10px,
+    10px 10px
 
 .my-porch
   height: 100%
