@@ -162,12 +162,13 @@ export default {
   },
 
   defaultAvatar (gender) {
-    if (gender === 'Male') {
-      return 'static/images/male.png'
-    } else if (gender === 'Female') {
-      return 'static/images/female.png'
-    } else {
-      return 'static/images/other.png'
+    switch (gender) {
+      case 'Male':
+        return 'static/images/male.png'
+      case 'Female':
+        return 'static/images/female.png'
+      case 'Other':
+        return 'static/images/other.png'
     }
   },
 
@@ -176,9 +177,14 @@ export default {
   },
 
   genderColor (gender) {
-    if (gender === 'Male') return 'blue'
-    else if (gender === 'Female') return 'pink'
-    else return 'purple'
+    switch (gender) {
+      case 'Male':
+        return 'blue'
+      case 'Female':
+        return 'pink'
+      case 'Other':
+        return 'purple'
+    }
   },
 
   likeCount (liked) {
@@ -249,19 +255,26 @@ export default {
   resolveFunc (res) {
     let errorMessage = null
     const has = Object.prototype.hasOwnProperty
-    if (!has.call(res.data, 'failed')) {
-    } else if (res.data.failed === 1) {
-      errorMessage = 'no empty room'
-    } else if (res.data.failed === 2) {
-      errorMessage = 'user already exists'
-    } else if (res.data.failed === 3) {
-      errorMessage = 'user does not exist'
-    } else if (res.data.failed === 4) {
-      errorMessage = 'wrong password'
-    } else if (res.data.failed === 5) {
-      errorMessage = 'no like-time'
-    } else {
-      errorMessage = 'undefined error'
+    if (has.call(res.data, 'failed')) {
+      switch (res.data.failed) {
+        case 1:
+          errorMessage = 'no empty room'
+          break
+        case 2:
+          errorMessage = 'user already exists'
+          break
+        case 3:
+          errorMessage = 'user does not exist'
+          break
+        case 4:
+          errorMessage = 'wrong password'
+          break
+        case 5:
+          errorMessage = 'no like-time'
+          break
+        default:
+          errorMessage = 'undefined error'
+      }
     }
     return errorMessage || res
   },
