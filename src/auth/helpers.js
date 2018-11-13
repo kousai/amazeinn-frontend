@@ -131,24 +131,18 @@ export default {
 
   checkName (name) {
     let errorMessage = null
-    if (!name || name === '') {
-      errorMessage = 'Name required.'
-    } else if (name.length > 9) {
-      errorMessage = 'Name has too many characters(at most 9).'
-    } else if (/^[A-Za-z0-9]+$/.test(name) === false) {
-      errorMessage = 'Please input a name with only numbers and letters.'
+    const reg = /^[A-Za-z0-9]{1, 9}$/
+    if (!reg.test(name)) {
+      errorMessage = '1~9 characters, and only numbers and letters.'
     }
     return errorMessage
   },
 
   checkPassword (password) {
     let errorMessage = null
-    if (!password || password === '') {
-      errorMessage = 'Password required.'
-    } else if (password.length < 8 || password.length > 24) {
-      errorMessage = 'Password only can have 8~24 characters.'
-    } else if (/^[A-Za-z0-9]+$/.test(password) === false) {
-      errorMessage = 'Please input a password with only numbers and letters.'
+    const reg = /^[A-Za-z0-9]{8, 24}$/
+    if (!reg.test(password)) {
+      errorMessage = '8~24 characters, and only numbers and letters.'
     }
     return errorMessage
   },
